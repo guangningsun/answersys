@@ -98,15 +98,35 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 SIMPLEUI_CONFIG = {
     'menus': [{
         'app': 'AppModel',
-        'name': '全局商品管理',
+        'name': '泰达智慧群团',
         'icon': 'fab fa-dashcube',
         'models': [{
-            'name': '考题管理',
-            'url': 'AppModel/',
+            'name': '公司管理',
+            'url': 'AppModel/companyinfo',
             'icon': 'fa fa-server'
         },{
-            'name': '考题管理',
-            'url': 'AppModel/',
+            'name': '员工管理',
+            'url': 'AppModel/userinfo',
+            'icon': 'fa fa-server'
+        },{
+            'name': '奖品管理',
+            'url': 'AppModel/awardinfo',
+            'icon': 'fa fa-server'
+        },{
+            'name': '题库管理',
+            'url': 'AppModel/questionbank',
+            'icon': 'fa fa-server'
+        },{
+            'name': '考卷管理',
+            'url': 'AppModel/testpaperinfo',
+            'icon': 'fa fa-server'
+        },{
+            'name': '成绩管理',
+            'url': 'AppModel/examscore',
+            'icon': 'fa fa-server'
+        },{
+            'name': '奖品领用',
+            'url': 'AppModel/useraward',
             'icon': 'fa fa-server'
         }]
         },{
