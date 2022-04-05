@@ -57,3 +57,5 @@ releasenotes/build
 
 server/AppModel/migrations/*
 server/media/*
+server/answersysapp.log
+server/db.sqlite3
