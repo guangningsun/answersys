@@ -20,6 +20,7 @@ import time, datetime
 import requests,configparser
 from AppModel.WXBizDataCrypt import WXBizDataCrypt 
 from django.conf import settings
+import qrcode,os
 
 
 logger = logging.getLogger(__name__)
@@ -47,7 +48,31 @@ def _generate_json_message(flag, message):
         return HttpResponse("{\"error\":1,\"msg\":\""+message+"\"}",
                             content_type='application/json',
                             )
-                    
+@api_view(['GET'])
+def get_qrcode(request):
+    if request.method == 'GET':
+        return render(request, "qrcode.html")                 
+
+
+@api_view(['POST'])
+def create_qrcode(request):
+    if request.method == 'POST':
+        if request.data["company_name"]:
+            try:
+                # import pdb;pdb.set_trace()
+                cmp_info = CompanyInfo.objects.get(company_name=request.data["company_name"])
+                img_path = os.path.split(os.path.realpath(__file__))[0]+"/../media/prcode_image/"+cmp_info.company_name+".jpg"
+                qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
+                cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
+                cmp_info.save()
+                return HttpResponse("{\"error\":0,\"msg\":\"msg\"}",
+                                    content_type='application/json',
+                                    )
+            except:
+                return HttpResponse("{\"error\":0,\"msg\":\"没有该公司\"}",
+                                    content_type='application/json',
+                                    )
+    
 
 # weixin 登录
 @api_view(['POST'])
