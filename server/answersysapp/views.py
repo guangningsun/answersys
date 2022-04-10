@@ -65,11 +65,20 @@ def create_qrcode(request):
                 qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
                 cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
                 cmp_info.save()
-                return HttpResponse("{\"error\":0,\"msg\":\"msg\"}",
-                                    content_type='application/json',
-                                    )
+                context = {'cmp_info':cmp_info} 
+                # return render(request,'qrcode.html',context)
+                j ={}
+                j["error"] = 0
+                j["cmp_name"] = cmp_info.company_name
+                j["cmp_img"] = "prcode_image/"+cmp_info.company_name+".jpg"
+                print(j)
+                # import pdb;pdb.set_trace()
+                return HttpResponse(json.dumps(j),content_type='application/json',)
+                # return HttpResponse("{\"error\":0,\"cmp_name\":\""+cmp_info.company_name+"\",\"cmp_img\":\""+cmp_info.prcode_image+"\"}",
+                #                     content_type='application/json',
+                #                     )
             except:
-                return HttpResponse("{\"error\":0,\"msg\":\"没有该公司\"}",
+                return HttpResponse("{\"error\":1,\"msg\":\"该公司\"}",
                                     content_type='application/json',
                                     )
     

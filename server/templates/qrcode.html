@@ -100,7 +100,12 @@
                                                data-trigger="change" data-required="true"
                                                placeholder="输入公司名称">
                                     </div>
-                                    <div class="step-pane" id="step3">This is step 3</div>
+                                    <div class="step-pane" id="step3">
+                                        <label>公司名称：</label>
+                                        <label id="cmp_name_id"></label><br>
+                                        <label>入口二维码：</label>
+                                        <img id="cmp_img_id"/>
+                                    </div>
                                 </form>
                                 <div class="actions m-t">
                                     <button type="button" class="btn btn-white btn-sm btn-next" onclick="create_prcode()">提交
@@ -143,13 +148,22 @@
             // contentType: "application/json",
             success: function(res) {
                 console.log(res)
-                if (res.status == 1) {
-                    console.log(res.info)
+                if (res["error"] == "0") {
+                    console.log(res["error"])
+                    var cmp_name = document.getElementById("cmp_name_id");
+                    var cmp_img = document.getElementById("cmp_img_id");
+                    cmp_name.innerText = res["cmp_name"];
+                    cmp_img.src="../media/"+res["cmp_img"];
+                    alert("二维码创建成功");
                 }
+                else if (res["error"] == "1"){
+                    alert("该公司不存在，请联系管理员")
+                }
+
                 $(".btn").attr('disabled', false);
             },
             error: function() {
-                alert("该公司不存在，请联系管理员");
+                alert("返回 error 该公司不存在，请联系管理员");
                 $(".btn").attr('disabled', false);
             }
         });
