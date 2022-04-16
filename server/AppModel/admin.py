@@ -69,10 +69,10 @@ class QuestionBankAdmin(ImportExportModelAdmin):
 # 考卷管理
 @admin.register(TestPaperInfo)
 class TestPaperInfoAdmin(admin.ModelAdmin): 
-    list_display=['starttime','endtime','examtime']
-    search_fields =('starttime','endtime','examtime')
+    list_display=['title','starttime','endtime','examtime']
+    search_fields =('title','starttime','endtime','examtime')
     fieldsets = [
-       ('用户数据', {'fields': ['starttime','endtime','examtime','pid'], 'classes': ['']}),
+       ('用户数据', {'fields': ['title','starttime','endtime','examtime','pid'], 'classes': ['']}),
     ]
     list_per_page = 15
 

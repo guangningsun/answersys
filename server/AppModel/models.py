@@ -69,7 +69,7 @@ class QuestionBank(models.Model):
     c = models.CharField('C选项',max_length=40)
     d = models.CharField('D选项',max_length=40)
     e = models.CharField('E选项',max_length=40)
-    answer = MultiSelectField(choices=(('A','A'),('B','B'),('C','C'),('D','D'),('E','E')),default='A')
+    answer = MultiSelectField('答案',choices=(('A','A'),('B','B'),('C','C'),('D','D'),('E','E')),default='A')
     score = models.IntegerField('分值')
 
     class Meta:
@@ -82,6 +82,7 @@ class QuestionBank(models.Model):
 
 
 class TestPaperInfo(models.Model):
+    title = models.TextField('考卷名称',default='测试卷')
     starttime = models.CharField(max_length=200,verbose_name='开始时间')
     endtime = models.CharField(max_length=200,verbose_name='结束时间')
     examtime = models.CharField(max_length=200,verbose_name='考试时长')
