@@ -6,6 +6,7 @@ from feincms.module.page.models import Page
 import datetime
 from django.utils.html import format_html
 from AppModel import *
+from multiselectfield import MultiSelectField
 
 class CompanyInfo(models.Model):
     company_name = models.CharField(max_length=200,verbose_name='公司名字')
@@ -68,7 +69,7 @@ class QuestionBank(models.Model):
     c = models.CharField('C选项',max_length=40)
     d = models.CharField('D选项',max_length=40)
     e = models.CharField('E选项',max_length=40)
-    answer = models.CharField('答案',choices=(('A','A'),('B','B'),('C','C'),('D','D'),('E','E')),max_length=4)
+    answer = MultiSelectField(choices=(('A','A'),('B','B'),('C','C'),('D','D'),('E','E')),default='A')
     score = models.IntegerField('分值')
 
     class Meta:
