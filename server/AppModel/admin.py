@@ -37,10 +37,10 @@ class CompanyInfoAdmin(ImportExportModelAdmin):
 # 用户管理
 @admin.register(UserInfo)
 class UserInfoAdmin(ImportExportModelAdmin): 
-    list_display=['user_name','id_card','phone_number','company_name','is_bd','describe','status','is_choose_award']
-    search_fields =('user_name','id_card','phone_number','company_name','is_bd','describe','status','is_choose_award')
+    list_display=['user_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union']
+    search_fields =('user_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union')
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','id_card','phone_number','company_name','is_bd','describe','status','is_choose_award'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union'], 'classes': ['']}),
     ]
     list_per_page = 15    
 
