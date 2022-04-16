@@ -25,20 +25,20 @@ class CompanyInfo(models.Model):
 
 
 class UserInfo(models.Model):
-    gender_choice = (
+    gender_choice = [
         ("0", "女"),
         ("1", "男"),
-    )
-    nations = (
+    ]
+    nations = [
         ("0","汉族"),
         ("1","回族"),
         ("2","满族"),
-    )
-    policy_roles = (
+    ]
+    policy_roles = [
         ("0","党员"),
         ("1","群员"),
         ("2","群众"),
-    )
+    ]
     user_name = models.CharField(max_length=200,verbose_name='用户名')
     gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice)
     nation = models.CharField(max_length=200,verbose_name='民族', choices=nations)
