@@ -57,6 +57,7 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name = '用户信息'
         verbose_name_plural = '用户信息'
+        managed = False
     
     def __str__(self):
         return self.user_name
@@ -119,6 +120,21 @@ class AwardInfo(models.Model):
 #     award_name
 #     datetime（天为时间）
 #     choose_num
+
+class ActionInfo(models.Model):
+    start_time = models.DateField(verbose_name='活动开始时间')
+    end_time = models.DateField(verbose_name='活动结束时间')
+    active_long = models.CharField(max_length=200,verbose_name='活动时长')
+    current_award_total = models.CharField(max_length=200,verbose_name='每天可领取奖品份数',default='2000')
+    award_total_num = models.CharField(max_length=200,verbose_name='奖品总数')
+    current_remind_num = models.CharField(max_length=200,verbose_name='奖品剩余总量')
+    
+    class Meta:
+        verbose_name = '奖品份数管理'
+        verbose_name_plural = '奖品份数管理'
+    
+    def __str__(self):
+        return self.date_time
 
 class UserAward(models.Model):
     user_name = models.CharField(max_length=200,verbose_name='用户名')

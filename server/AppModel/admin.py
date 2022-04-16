@@ -87,6 +87,16 @@ class ExamScoreAdmin(admin.ModelAdmin):
     list_per_page = 15
 
 
+@admin.register(ActionInfo)
+class ActionInfoAdmin(admin.ModelAdmin): 
+    list_display=['start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num']
+    search_fields =('start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num')
+    fieldsets = [
+       ('用户数据', {'fields': ['start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num'], 'classes': ['']}),
+    ]
+    list_per_page = 15
+     
+
 # 领奖管理
 @admin.register(UserAward)
 class UserAwardAdmin(admin.ModelAdmin): 
