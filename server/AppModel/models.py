@@ -53,6 +53,9 @@ class UserInfo(models.Model):
     company_name = models.CharField(max_length=200,verbose_name='单位名称')
     labour_union = models.CharField(max_length=200,verbose_name='所属工会')
     join_union = models.DateField(verbose_name='入会时间')
+    nick_name = models.CharField(max_length=200,verbose_name='微信名')
+    weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
+
     
     class Meta:
         verbose_name = '用户信息'
@@ -122,6 +125,7 @@ class AwardInfo(models.Model):
 #     choose_num
 
 class ActionInfo(models.Model):
+    action_name = models.CharField(max_length=200,verbose_name='活动名称')
     start_time = models.DateField(verbose_name='活动开始时间')
     end_time = models.DateField(verbose_name='活动结束时间')
     active_long = models.CharField(max_length=200,verbose_name='活动时长')
@@ -134,7 +138,7 @@ class ActionInfo(models.Model):
         verbose_name_plural = '奖品份数管理'
     
     def __str__(self):
-        return self.date_time
+        return self.action_name
 
 class UserAward(models.Model):
     user_name = models.CharField(max_length=200,verbose_name='用户名')

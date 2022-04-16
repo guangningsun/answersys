@@ -89,10 +89,10 @@ class ExamScoreAdmin(admin.ModelAdmin):
 
 @admin.register(ActionInfo)
 class ActionInfoAdmin(admin.ModelAdmin): 
-    list_display=['start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num']
-    search_fields =('start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num')
+    list_display=['action_name','start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num']
+    search_fields =('action_name','start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num')
     fieldsets = [
-       ('用户数据', {'fields': ['start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num'], 'classes': ['']}),
+       ('用户数据', {'fields': ['action_name','start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num'], 'classes': ['']}),
     ]
     list_per_page = 15
      
