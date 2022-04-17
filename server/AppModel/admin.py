@@ -75,6 +75,7 @@ class TestPaperInfoAdmin(admin.ModelAdmin):
        ('用户数据', {'fields': ['title','starttime','endtime','examtime','pid'], 'classes': ['']}),
     ]
     list_per_page = 15
+    filter_horizontal = ('pid',)
 
 # 员工成绩管理
 @admin.register(ExamScore)

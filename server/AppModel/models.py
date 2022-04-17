@@ -90,7 +90,7 @@ class TestPaperInfo(models.Model):
     starttime = models.CharField(max_length=200,verbose_name='开始时间')
     endtime = models.CharField(max_length=200,verbose_name='结束时间')
     examtime = models.CharField(max_length=200,verbose_name='考试时长')
-    pid = models.ManyToManyField(QuestionBank)
+    pid = models.ManyToManyField(QuestionBank,verbose_name='考题')
     
     class Meta:
         verbose_name = '试卷'
