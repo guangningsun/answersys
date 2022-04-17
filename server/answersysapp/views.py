@@ -240,12 +240,16 @@ def get_rankinfo(request):
     if request.method == 'GET':
         rank_info = ExamScore.objects.all().order_by('-score')
         res = []
+        tmp_set = set()
         for obj in rank_info:
+            if obj.phone_number in tmp_set:
+                continue
             try:
                 user_info = UserInfo.objects.get(phone_number=obj.phone_number)
             except ObjectDoesNotExist as err:
                 logger.error('此员工不在员工列表中，ERR: %s' % err)
                 continue
+            tmp_set.add(obj.phone_number)
             tmp={}
             tmp['id'] = user_info.user_name
             tmp['tel'] = user_info.phone_number
