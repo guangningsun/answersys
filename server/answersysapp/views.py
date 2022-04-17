@@ -240,7 +240,7 @@ def get_rankinfo(request):
         res = []
         for obj in rank_info:
             try:
-                user_info = UserInfo.objects.get(user_name=obj.user_name)
+                user_info = UserInfo.objects.get(phone_number=obj.phone_number)
             except ObjectDoesNotExist as err:
                 logger.error('此员工不在员工列表中，ERR: %s' % err)
                 continue
@@ -253,4 +253,4 @@ def get_rankinfo(request):
         #serializer = ExamScoreInfoSerializer(rank_info, many=True)
         res_json = {"error": 0,"msg": {
                     "rankList": res }}
-        return Response(json.dumps(res_json))
+        return Response(res_json)

@@ -80,10 +80,10 @@ class TestPaperInfoAdmin(admin.ModelAdmin):
 # 员工成绩管理
 @admin.register(ExamScore)
 class ExamScoreAdmin(admin.ModelAdmin): 
-    list_display=['user_name','company_name','score','right_num','wrong_num']
-    search_fields =('user_name','company_name','score','right_num','wrong_num')
+    list_display=['user_name','phone_number','company_name','score','right_num','wrong_num','create_time']
+    search_fields =('user_name','phone_number','company_name','score','right_num','wrong_num','create_time')
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','company_name','score','right_num','wrong_num'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','phone_number','company_name','score','right_num','wrong_num'], 'classes': ['']}),
     ]
     list_per_page = 15
 

@@ -100,11 +100,12 @@ class TestPaperInfo(models.Model):
 #成绩榜
 class ExamScore(models.Model):
     user_name =  models.CharField(max_length=200,verbose_name='用户名')
+    phone_number = models.CharField(max_length=200,verbose_name='手机号码')
     company_name =  models.CharField(max_length=200,verbose_name='所属公司')
     score =  models.IntegerField(verbose_name='总分')
     right_num =  models.CharField(max_length=200,verbose_name='答对题目')
     wrong_num =  models.CharField(max_length=200,verbose_name='答错题目')
-
+    create_time = models.DateTimeField(auto_now_add=True,verbose_name='考试时间')  # 创建时间
 
 # 奖品信息
 class AwardInfo(models.Model):
