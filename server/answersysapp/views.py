@@ -343,14 +343,12 @@ def get_award_info(request):
                     "awardlist": serializer.data }}
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def get_user_award_info(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         res = []
-        params = request.GET
-        #import pdb;pdb.set_trace()
         try:
-            phone_number = params['tel']
+            phone_number = request.data["phone_number"]
         except KeyError as err:
             logger.error('参数错误.')
             return HttpResponseBadRequest()
