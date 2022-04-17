@@ -21,7 +21,7 @@ import requests,configparser
 from AppModel.WXBizDataCrypt import WXBizDataCrypt 
 from django.conf import settings
 import qrcode,os
-
+from django.core.exceptions import ObjectDoesNotExist
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -239,7 +239,11 @@ def get_rankinfo(request):
         rank_info = ExamScore.objects.all().order_by('-score')
         res = []
         for obj in rank_info:
-            user_info = UserInfo.objects.get(user_name=obj.user_name)
+            try:
+                user_info = UserInfo.objects.get(user_name=obj.user_name)
+            except ObjectDoesNotExist as err:
+                logger.error('此员工不在员工列表中，ERR: %s' % err)
+                continue
             tmp={}
             tmp['id'] = user_info.user_name
             tmp['tel'] = user_info.phone_number
