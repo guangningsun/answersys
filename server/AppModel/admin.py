@@ -101,10 +101,10 @@ class ActionInfoAdmin(admin.ModelAdmin):
 # 领奖管理
 @admin.register(UserAward)
 class UserAwardAdmin(admin.ModelAdmin): 
-    list_display=['user_name','company_name','answer_exam_name','is_finished','award_name']
-    search_fields =('user_name','company_name','answer_exam_name','is_finished','award_name')
+    list_display=['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name']
+    search_fields =('user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name')
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','company_name','answer_exam_name','is_finished','award_name'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name'], 'classes': ['']}),
     ]
     list_per_page = 15
 

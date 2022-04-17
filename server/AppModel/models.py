@@ -143,10 +143,12 @@ class ActionInfo(models.Model):
 
 class UserAward(models.Model):
     user_name = models.CharField(max_length=200,verbose_name='用户名')
-    company_name = models.CharField(max_length=200,verbose_name='单位名称')
-    answer_exam_name = models.CharField(max_length=200,verbose_name='所答考卷单位')
+    phone_number = models.CharField(max_length=200,verbose_name='手机号码')
+    labour_name = models.CharField(max_length=200,verbose_name='工会名称')
+    company_name = models.CharField(max_length=200,verbose_name='所答考卷单位')
+    company_address = models.CharField(max_length=200,verbose_name='单位地址')
     is_finished= models.BooleanField(verbose_name='是否已领奖品',default="False") 
-    award_name = models.CharField(max_length=200,verbose_name='所答考卷单位')
+    award_name = models.CharField(max_length=200,verbose_name='奖品信息')
     
     class Meta:
         verbose_name = '领奖信息'

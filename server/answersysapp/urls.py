@@ -19,23 +19,11 @@ urlpatterns = [
     path('get_answer_result/',views.get_answer_result),
     path('submit_paper/',views.submit_paper),
     path('get_award_info/',views.get_award_info),
-    
-    
-    
+    path('get_user_award_info/',views.get_user_award_info),
 
     path('get_user_info_by_wxid/<weixin_id>', views.get_user_info_by_wxid),
     
     re_path(r'^media/(?P<path>.+)$', serve, {'document_root': settings.MEDIA_ROOT}),
-
-
-    
-    
-
-
-    
-    
-    
-    
 
 ] 
  

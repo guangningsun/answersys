@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 from django.shortcuts import render
 from django.shortcuts import redirect
 from rest_framework import viewsets, filters,permissions
@@ -330,8 +330,6 @@ def get_award_num(request):
         }
         return Response(res_json)
 
-
-
 # 获取奖品信息
 @api_view(['GET'])
 def get_award_info(request):
@@ -340,4 +338,39 @@ def get_award_info(request):
         serializer = AwardInfoSerializer(awardinfoset, many=True)
         res_json = {"error": 0,"msg": {
                     "awardlist": serializer.data }}
+
+@api_view(['GET'])
+def get_user_award_info(request):
+    if request.method == 'GET':
+        res = []
+        params = request.GET
+        #import pdb;pdb.set_trace()
+        try:
+            phone_number = params['tel']
+        except KeyError as err:
+            logger.error('参数错误.')
+            return HttpResponseBadRequest()
+        try:
+            award = UserAward.objects.get(phone_number=phone_number)
+        except ObjectDoesNotExist as err:
+            user_info = UserInfo.objects.get(phone_number=phone_number)
+            company_info = CompanyInfo.objects.get(company_name=user_info.company_name)
+            tmp = {}
+            tmp['name'] = user_info.user_name
+            tmp['tel'] = user_info.phone_number
+            tmp['labour'] = user_info.labour_union
+            tmp['company'] = user_info.company_name
+            tmp['company_address'] = company_info.company_address
+            res.append(tmp)
+            res_json = {"error": 0,"msg": {"awardInfos": res }}
+            return Response(res_json)
+
+        tmp={}
+        tmp['name'] = award.user_name
+        tmp['tel'] = award.phone_number
+        tmp['labour'] = award.labour_name
+        tmp['company'] = award.company_name
+        tmp['company_address'] = award.company_address
+        res.append(tmp)
+        res_json = {"error": 0,"msg": {"awardInfos": res }}
         return Response(res_json)
