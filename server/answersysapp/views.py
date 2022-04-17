@@ -113,6 +113,10 @@ def weixin_sns(request,js_code):
                 cwsk = WeixinSessionKey(weixin_openid=openid,weixin_sessionkey=session_key)
                 cwsk.save()
                 is_login = "0"
+            except UserInfo.DoesNotExist:
+                return HttpResponse("{\"error\":0,\"msg\":\"登录失败,不存在该用户\",\"openid\":\""+openid+"\",\"is_login\":\""+is_login+"\"}",
+                            content_type='application/json',)
+
 
             return HttpResponse("{\"error\":0,\"msg\":\"登录成功\",\"openid\":\""+openid+"\",\"is_login\":\""+is_login+"\"}",
                             content_type='application/json',)
@@ -147,7 +151,7 @@ def weixin_gusi(request):
                 # res_data["auth"] = "0"
             return HttpResponse(json.dumps(res_data),content_type='application/json')
         except:
-            pass
+            return HttpResponse(json.dumps("{\"error\":1}"),content_type='application/json')
 
 
 def __weixin_send_message(touser,date3,thing6,phrase1):
@@ -179,3 +183,14 @@ def __weixin_send_message(touser,date3,thing6,phrase1):
     response = requests.post(requst_data, data = json.dumps(body))
     logger.info("通知用户 %s  内容为 %s  微信服务器返回结果为 %s" % (touser, json.dumps(body),response.content))
     return 0
+
+
+# 通过微信id获取用户信息
+@api_view(['GET'])
+def get_user_info_by_wxid(request,weixin_id):
+    if request.method == 'GET':
+        userset = UserInfo.objects.filter(weixin_openid=weixin_id)
+        serializer = UserInfoSerializer(userset, many=True)
+        res_json = {"error": 0,"msg": {
+                    "user_info": serializer.data }}
+        return Response(res_json)
