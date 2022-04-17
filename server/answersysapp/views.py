@@ -222,7 +222,7 @@ def get_testpaperinfo(request):
 
             ret_questionList.append(tmp_json)
         res_json = {"error": 0,"msg": {
-                    "testpaper_info": ret_questionList }}
+                    "questionList": ret_questionList }}
         return Response(res_json)
 
 

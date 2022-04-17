@@ -27,6 +27,7 @@ class ExamScoreInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExamScore
         fields = ('user_name','company_name','score')
+
 class QuestionBankSerializer(serializers.ModelSerializer):
 
     class Meta:
