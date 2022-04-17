@@ -195,6 +195,31 @@ def get_user_info_by_wxid(request,weixin_id):
                     "user_info": serializer.data }}
         return Response(res_json)
 
+
+# 获取最后一次提交的成绩
+@api_view(['POST'])
+def get_answer_result(request):
+    if request.method == 'POST':
+        if request.data["phone_number"]:
+            eslist = ExamScore.objects.filter(phone_number=request.data["phone_number"]).last()
+            ans_res ={}
+            ans_res["score"]= eslist.score
+            if eslist.score == 100:
+                ans_res["hint"]="恭喜您获得满分！您有机会获选择会员日普惠商品一件"
+            else:
+                ans_res["hint"]="继续努力"
+            ans_res["remain"] = ActionInfo.objects.all()[0].current_award_total
+            res_json = {"error": 0,"msg": {
+                        "answer_result": ans_res }}
+            return Response(res_json)
+
+# answerResult:{
+#      score:100,
+#      hint:"恭喜您获得满分！您有机会获选择会员日普惠商品一件",
+#      remain:10
+#     }
+
+
 # 获取试卷信息
 @api_view(['GET'])
 def get_testpaperinfo(request):
