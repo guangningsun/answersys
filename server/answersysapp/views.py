@@ -201,9 +201,37 @@ def get_testpaperinfo(request):
     if request.method == 'GET':
         testpaperset = TestPaperInfo.objects.all()
         serializer = TestPaperInfoSerializer(testpaperset, many=True)
+        #获取问题数组
+        question_bank_list = serializer.data[0]['pid']
+        ret_questionList =[]
+        for qb_info in question_bank_list:
+            qd_od = _get_questiondetail_by_id(qb_info)
+            tmp_json = {}
+            tmp_json["id"] = qb_info
+            tmp_json["title"] =qd_od["title"]
+            tmp_json["type"] = qd_od["qtype"]
+            tmp_json["right_answer"] = qd_od["answer"]
+            ret_chooseitems =[]
+            for i in ["a","b","c","d","e"]:
+                if qd_od[i] != '-':
+                    ci ={}
+                    ci["item_index"] = i.upper()
+                    ci["item_content"] = qd_od[i]
+                    ret_chooseitems.append(ci)
+            tmp_json["chooseItems"] = ret_chooseitems
+
+            ret_questionList.append(tmp_json)
         res_json = {"error": 0,"msg": {
-                    "testpaper_info": serializer.data }}
+                    "testpaper_info": ret_questionList }}
         return Response(res_json)
+
+
+def _get_questiondetail_by_id(pid):
+    if pid:
+        qb_info_set = QuestionBank.objects.filter(id=pid)
+        serializer = QuestionBankSerializer(qb_info_set,many=True)
+        return serializer.data[0]
+
 
 @api_view(['GET'])
 def get_rankinfo(request):
@@ -213,3 +241,4 @@ def get_rankinfo(request):
         res_json = {"error": 0,"msg": {
                     "rank_info": serializer.data }}
         return Response(res_json)
+
