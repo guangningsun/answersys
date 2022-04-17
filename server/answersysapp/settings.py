@@ -94,7 +94,12 @@ SIMPLEUI_HOME_ACTION = True
 SIMPLEUI_ANALYSIS = False
 # 批量导入数据
 IMPORT_EXPORT_USE_TRANSACTIONS = True
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+
 SIMPLEUI_CONFIG = {
     'menus': [{
         'app': 'AppModel',
@@ -123,6 +128,10 @@ SIMPLEUI_CONFIG = {
         },{
             'name': '成绩管理',
             'url': 'AppModel/examscore',
+            'icon': 'fa fa-server'
+        },{
+            'name': '奖品份数管理',
+            'url': 'AppModel/actioninfo',
             'icon': 'fa fa-server'
         },{
             'name': '奖品领用',

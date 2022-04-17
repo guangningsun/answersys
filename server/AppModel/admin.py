@@ -14,7 +14,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 import time
 import decimal
-
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -36,13 +36,13 @@ class CompanyInfoAdmin(ImportExportModelAdmin):
 
 # 用户管理
 @admin.register(UserInfo)
-class UserInfoAdmin(ImportExportModelAdmin): 
-    list_display=['user_name','id_card','phone_number','company_name','is_bd','describe','status','is_choose_award']
-    search_fields =('user_name','id_card','phone_number','company_name','is_bd','describe','status','is_choose_award')
+class UserInfoAdmin(ImportExportModelAdmin):
+    list_display=['user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head']
+    search_fields =('user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head')
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','id_card','phone_number','company_name','is_bd','describe','status','is_choose_award'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head'], 'classes': ['']}),
     ]
-    list_per_page = 15    
+    list_per_page = 15
 
 
 # 奖品管理
@@ -69,31 +69,42 @@ class QuestionBankAdmin(ImportExportModelAdmin):
 # 考卷管理
 @admin.register(TestPaperInfo)
 class TestPaperInfoAdmin(admin.ModelAdmin): 
-    list_display=['starttime','endtime','examtime']
-    search_fields =('starttime','endtime','examtime')
+    list_display=['title','starttime','endtime','examtime']
+    search_fields =('title','starttime','endtime','examtime')
     fieldsets = [
-       ('用户数据', {'fields': ['starttime','endtime','examtime','pid'], 'classes': ['']}),
+       ('用户数据', {'fields': ['title','starttime','endtime','examtime','pid'], 'classes': ['']}),
     ]
     list_per_page = 15
+    filter_horizontal = ('pid',)
 
 # 员工成绩管理
 @admin.register(ExamScore)
 class ExamScoreAdmin(admin.ModelAdmin): 
-    list_display=['user_name','company_name','score','right_num','wrong_num']
-    search_fields =('user_name','company_name','score','right_num','wrong_num')
+    list_display=['user_name','phone_number','company_name','score','right_num','wrong_num','create_time']
+    search_fields =('user_name','phone_number','company_name','score','right_num','wrong_num','create_time')
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','company_name','score','right_num','wrong_num'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','phone_number','company_name','score','right_num','wrong_num'], 'classes': ['']}),
     ]
     list_per_page = 15
 
 
+@admin.register(ActionInfo)
+class ActionInfoAdmin(admin.ModelAdmin): 
+    list_display=['action_name','start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num']
+    search_fields =('action_name','start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num')
+    fieldsets = [
+       ('用户数据', {'fields': ['action_name','start_time','end_time','active_long','current_award_total','award_total_num','current_remind_num'], 'classes': ['']}),
+    ]
+    list_per_page = 15
+     
+
 # 领奖管理
 @admin.register(UserAward)
 class UserAwardAdmin(admin.ModelAdmin): 
-    list_display=['user_name','company_name','answer_exam_name','is_finished','award_name']
-    search_fields =('user_name','company_name','answer_exam_name','is_finished','award_name')
+    list_display=['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name']
+    search_fields =('user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name')
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','company_name','answer_exam_name','is_finished','award_name'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name'], 'classes': ['']}),
     ]
     list_per_page = 15
 
