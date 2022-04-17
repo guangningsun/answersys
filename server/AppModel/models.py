@@ -86,10 +86,10 @@ class QuestionBank(models.Model):
 
 
 class TestPaperInfo(models.Model):
-    title = models.TextField('考卷名称',default='测试卷')
-    starttime = models.CharField(max_length=200,verbose_name='开始时间')
-    endtime = models.CharField(max_length=200,verbose_name='结束时间')
-    examtime = models.CharField(max_length=200,verbose_name='考试时长')
+    title = models.CharField(max_length=200,verbose_name='考卷名称',default='测试卷')
+    starttime = models.DateTimeField(verbose_name='开始时间')
+    endtime = models.DateTimeField(verbose_name='结束时间')
+    examtime = models.IntegerField(verbose_name='考试时长')
     pid = models.ManyToManyField(QuestionBank,verbose_name='考题')
     
     class Meta:
