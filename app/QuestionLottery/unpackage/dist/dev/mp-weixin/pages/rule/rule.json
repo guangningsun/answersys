@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "规则",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-navbar": "/uview-ui/components/u-navbar/u-navbar"
+  }
+}

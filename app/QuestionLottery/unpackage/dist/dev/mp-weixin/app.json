@@ -1,0 +1,26 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/rule/rule",
+    "pages/answering/answering",
+    "pages/answer_finish/answer_finish",
+    "pages/answer_analysis/answer_analysis",
+    "pages/id_num_verify/id_num_verify",
+    "pages/rank/rank",
+    "pages/receive_history/receive_history",
+    "pages/receive_info_check/receive_info_check",
+    "pages/award_choose/award_choose"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarBackgroundColor": "#6141ea",
+    "navigationBarTitleText": "智慧群团",
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FFFFFF"
+  },
+  "usingComponents": {
+    "cu-custom": "/colorui/components/cu-custom"
+  }
+}

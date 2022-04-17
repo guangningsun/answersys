@@ -1,0 +1,21 @@
+@charset "UTF-8";
+/* 水平间距 */
+/* 水平间距 */
+.u-page__button-item {
+  margin: 0 15px 15px 0;
+}
+.u-demo-block {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.u-demo-block__title {
+  font-size: 15px;
+}
+.u-demo-block__content {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+

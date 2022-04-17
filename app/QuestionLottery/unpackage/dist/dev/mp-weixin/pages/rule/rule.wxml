@@ -1,0 +1,1 @@
+<view class="u-page"><view><u-navbar vue-id="f6864180-1" bgColor="#6141ea" title="活动规则" autoBack="{{true}}" safeAreaInsetTop="{{true}}" fixed="{{true}}" placeholder="{{true}}" titleStyle="color: #FFFFFF;" data-event-opts="{{[['^rightClick',[['rightClick']]]]}}" bind:rightClick="__e" bind:__l="__l"></u-navbar></view><view>test</view></view>
