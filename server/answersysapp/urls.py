@@ -17,6 +17,8 @@ urlpatterns = [
     path('get_rankinfo/',views.get_rankinfo),
     path('get_award_num/',views.get_award_num),
     path('get_answer_result/',views.get_answer_result),
+    path('submit_paper/',views.submit_paper),
+    
     
 
     path('get_user_info_by_wxid/<weixin_id>', views.get_user_info_by_wxid),

@@ -213,12 +213,36 @@ def get_answer_result(request):
                         "answer_result": ans_res }}
             return Response(res_json)
 
-# answerResult:{
-#      score:100,
-#      hint:"恭喜您获得满分！您有机会获选择会员日普惠商品一件",
-#      remain:10
-#     }
-
+# 交卷接口
+@api_view(['POST'])
+def submit_paper(request):
+    if request.method == 'POST':
+        user_phone_number = request.data["phone_number"]
+        answer_list = request.data["answers"]
+        total_score=100
+        right_num = len(answer_list)
+        wrong_num = 0
+        for a in answer_list:
+            qb_info = QuestionBank.objects.get(pid=a["pid"])
+            if qb_info.answer == a["answer"]:
+                continue
+            else:
+                total_score = total_score - qb_info.score
+                right_num = right_num -1
+                wrong_num = wrong_num +1
+        ui = UserInfo.objects.get(phone_number=user_phone_number)
+        es = ExamScore(user_name = ui.user_name,
+                        phone_number = user_phone_number,
+                        company_name = ui.company_name, 
+                        score =  total_score,
+                        right_num =  right_num,
+                        wrong_num =  wrong_num)
+        es.save()
+        res_json ={}
+        res_json["error"]=0
+        res_json["msg"]="提交成功"
+        return Response(res_json)
+                    
 
 # 获取试卷信息
 @api_view(['GET'])
