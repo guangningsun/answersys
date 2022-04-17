@@ -330,4 +330,14 @@ def get_award_num(request):
         }
         return Response(res_json)
 
-        
+
+
+# 获取奖品信息
+@api_view(['GET'])
+def get_award_info(request):
+    if request.method == 'GET':
+        awardinfoset = AwardInfo.objects.all()
+        serializer = AwardInfoSerializer(awardinfoset, many=True)
+        res_json = {"error": 0,"msg": {
+                    "awardlist": serializer.data }}
+        return Response(res_json)

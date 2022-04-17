@@ -33,3 +33,10 @@ class QuestionBankSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionBank
         fields = ('title','qtype','a','b','c','d','e','answer','score')
+
+class AwardInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AwardInfo
+        fields = ('award_name','award_image','current_max')
+
