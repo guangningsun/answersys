@@ -220,16 +220,18 @@ def submit_paper(request):
         user_phone_number = request.data["phone_number"]
         answer_list = request.data["answers"]
         total_score=100
-        right_num = len(answer_list)
+        right_num = len(json.loads(answer_list))
         wrong_num = 0
-        for a in answer_list:
-            qb_info = QuestionBank.objects.get(pid=a["pid"])
+        for a in json.loads(answer_list):
+            qb_info = QuestionBank.objects.get(id=a["pid"])
             if qb_info.answer == a["answer"]:
                 continue
             else:
                 total_score = total_score - qb_info.score
                 right_num = right_num -1
                 wrong_num = wrong_num +1
+        if total_score<= 0:
+            total_score=0
         ui = UserInfo.objects.get(phone_number=user_phone_number)
         es = ExamScore(user_name = ui.user_name,
                         phone_number = user_phone_number,
@@ -330,6 +332,7 @@ def get_award_num(request):
         }
         return Response(res_json)
 
+
 # 获取奖品信息
 @api_view(['GET'])
 def get_award_info(request):
@@ -338,6 +341,7 @@ def get_award_info(request):
         serializer = AwardInfoSerializer(awardinfoset, many=True)
         res_json = {"error": 0,"msg": {
                     "awardlist": serializer.data }}
+
 
 @api_view(['GET'])
 def get_user_award_info(request):
@@ -373,4 +377,15 @@ def get_user_award_info(request):
         tmp['company_address'] = award.company_address
         res.append(tmp)
         res_json = {"error": 0,"msg": {"awardInfos": res }}
+        return Response(res_json)
+
+
+# 获取奖品信息
+@api_view(['POST'])
+def revice_award(request):
+    if request.method == 'POST':
+        awardinfoset = AwardInfo.objects.all()
+        serializer = AwardInfoSerializer(awardinfoset, many=True)
+        res_json = {"error": 0,"msg": {
+                    "awardlist": serializer.data }}
         return Response(res_json)
