@@ -237,8 +237,16 @@ def _get_questiondetail_by_id(pid):
 def get_rankinfo(request):
     if request.method == 'GET':
         rank_info = ExamScore.objects.all().order_by('-score')
-        serializer = ExamScoreInfoSerializer(rank_info, many=True)
+        res = []
+        for obj in rank_info:
+            user_info = UserInfo.objects.get(user_name=obj.user_name)
+            tmp={}
+            tmp['id'] = user_info.user_name
+            tmp['tel'] = user_info.phone_number
+            tmp['score'] = obj.score
+            tmp['img'] = str(user_info.pic_head)
+            res.append(tmp)
+        #serializer = ExamScoreInfoSerializer(rank_info, many=True)
         res_json = {"error": 0,"msg": {
-                    "rank_info": serializer.data }}
-        return Response(res_json)
-
+                    "rankList": res }}
+        return Response(json.dumps(res_json))

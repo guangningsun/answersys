@@ -41,6 +41,7 @@ class UserInfo(models.Model):
         ("2","群众"),
     ]
     user_name = models.CharField(max_length=200,verbose_name='用户名')
+    nick_name = models.CharField(max_length=200,verbose_name='微信名')
     gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice)
     nation = models.CharField(max_length=200,verbose_name='民族', choices=nations)
     policy_role = models.CharField(max_length=20,verbose_name='政治面貌', choices=policy_roles)
@@ -53,14 +54,13 @@ class UserInfo(models.Model):
     company_name = models.CharField(max_length=200,verbose_name='单位名称')
     labour_union = models.CharField(max_length=200,verbose_name='所属工会')
     join_union = models.DateField(verbose_name='入会时间')
-    nick_name = models.CharField(max_length=200,verbose_name='微信名')
     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
+    pic_head = models.ImageField(u'头像',null=True, blank=True, upload_to='head_image')
 
     
     class Meta:
         verbose_name = '用户信息'
         verbose_name_plural = '用户信息'
-        managed = False
     
     def __str__(self):
         return self.user_name
