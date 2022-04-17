@@ -260,3 +260,25 @@ def get_rankinfo(request):
         res_json = {"error": 0,"msg": {
                     "rankList": res }}
         return Response(res_json)
+
+@api_view(['GET'])
+def get_award_num(request):
+    if request.method == 'GET':
+        award_info = ActionInfo.objects.filter(start_time__lte=datetime.datetime.now(),end_time__gte=datetime.datetime.now()).order_by('start_time')
+        logger.info('award_info: %s' % award_info.count())
+        if award_info.count() == 0:
+            res_json = {
+                "error":1,
+                "msg": "此时间暂无活动。"
+            }
+            return Response(res_json)
+        obj = award_info[0]
+        res_json = {
+            "error":1,
+            "msg": {
+                "award": obj.current_award_total
+            }
+        }
+        return Response(res_json)
+
+        

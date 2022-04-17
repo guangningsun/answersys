@@ -15,6 +15,7 @@ urlpatterns = [
     path('create_qrcode/', views.create_qrcode),
     path('get_testpaperinfo/',views.get_testpaperinfo),
     path('get_rankinfo/',views.get_rankinfo),
+    path('get_award_num/',views.get_award_num),
 
     path('get_user_info_by_wxid/<weixin_id>', views.get_user_info_by_wxid),
     
