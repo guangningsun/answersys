@@ -21,3 +21,9 @@ class TestPaperInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = TestPaperInfo
         fields = ('title','starttime','endtime','examtime','pid')
+
+class ExamScoreInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ExamScore
+        fields = ('user_name','company_name','score')

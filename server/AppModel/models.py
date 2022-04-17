@@ -101,7 +101,7 @@ class TestPaperInfo(models.Model):
 class ExamScore(models.Model):
     user_name =  models.CharField(max_length=200,verbose_name='用户名')
     company_name =  models.CharField(max_length=200,verbose_name='所属公司')
-    score =  models.CharField(max_length=200,verbose_name='总分')
+    score =  models.IntegerField(verbose_name='总分')
     right_num =  models.CharField(max_length=200,verbose_name='答对题目')
     wrong_num =  models.CharField(max_length=200,verbose_name='答错题目')
 

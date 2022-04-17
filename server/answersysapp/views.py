@@ -204,3 +204,12 @@ def get_testpaperinfo(request):
         res_json = {"error": 0,"msg": {
                     "testpaper_info": serializer.data }}
         return Response(res_json)
+
+@api_view(['GET'])
+def get_rankinfo(request):
+    if request.method == 'GET':
+        rank_info = ExamScore.objects.all().order_by('-score')
+        serializer = ExamScoreInfoSerializer(rank_info, many=True)
+        res_json = {"error": 0,"msg": {
+                    "rank_info": serializer.data }}
+        return Response(res_json)
