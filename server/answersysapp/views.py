@@ -204,10 +204,12 @@ def get_testpaperinfo(request):
         #获取问题数组
         question_bank_list = serializer.data[0]['pid']
         ret_questionList =[]
+        ii=1
         for qb_info in question_bank_list:
             qd_od = _get_questiondetail_by_id(qb_info)
             tmp_json = {}
-            tmp_json["id"] = qb_info
+            tmp_json["id"] = ii
+            tmp_json["pid"] = qb_info
             tmp_json["title"] =qd_od["title"]
             tmp_json["type"] = qd_od["qtype"]
             tmp_json["right_answer"] = qd_od["answer"]
@@ -219,7 +221,7 @@ def get_testpaperinfo(request):
                     ci["item_content"] = qd_od[i]
                     ret_chooseitems.append(ci)
             tmp_json["chooseItems"] = ret_chooseitems
-
+            ii = ii+1
             ret_questionList.append(tmp_json)
         res_json = {"error": 0,"msg": {
                     "questionList": ret_questionList }}
