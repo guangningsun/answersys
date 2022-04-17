@@ -15,3 +15,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
         fields = ('weixin_id','phone_number')
+
+class TestPaperInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TestPaperInfo
+        fields = ('title','starttime','endtime','examtime','pid')

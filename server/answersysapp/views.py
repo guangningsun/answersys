@@ -194,3 +194,13 @@ def get_user_info_by_wxid(request,weixin_id):
         res_json = {"error": 0,"msg": {
                     "user_info": serializer.data }}
         return Response(res_json)
+
+# 获取试卷信息
+@api_view(['GET'])
+def get_testpaperinfo(request):
+    if request.method == 'GET':
+        testpaperset = TestPaperInfo.objects.all()
+        serializer = TestPaperInfoSerializer(testpaperset, many=True)
+        res_json = {"error": 0,"msg": {
+                    "testpaper_info": serializer.data }}
+        return Response(res_json)

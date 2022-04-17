@@ -13,6 +13,8 @@ urlpatterns = [
     path('weixin_gusi/', views.weixin_gusi),
     path('get_qrcode/', views.get_qrcode),
     path('create_qrcode/', views.create_qrcode),
+    path('get_testpaperinfo/',views.get_testpaperinfo),
+    path('get_testorder/',views.get_testorder),
     
     path('get_user_info_by_wxid/<weixin_id>', views.get_user_info_by_wxid),
     
