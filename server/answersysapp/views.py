@@ -346,7 +346,6 @@ def get_award_info(request):
 @api_view(['POST'])
 def get_user_award_info(request):
     if request.method == 'POST':
-        res = []
         try:
             phone_number = request.data["phone_number"]
         except KeyError as err:
@@ -363,8 +362,7 @@ def get_user_award_info(request):
             tmp['labour'] = user_info.labour_union
             tmp['company'] = user_info.company_name
             tmp['company_address'] = company_info.company_address
-            res.append(tmp)
-            res_json = {"error": 0,"msg": {"awardInfos": res }}
+            res_json = {"error": 0,"msg": {"awardInfos": tmp }}
             return Response(res_json)
 
         tmp={}
@@ -373,8 +371,7 @@ def get_user_award_info(request):
         tmp['labour'] = award.labour_name
         tmp['company'] = award.company_name
         tmp['company_address'] = award.company_address
-        res.append(tmp)
-        res_json = {"error": 0,"msg": {"awardInfos": res }}
+        res_json = {"error": 0,"msg": {"awardInfos": tmp }}
         return Response(res_json)
 
 
