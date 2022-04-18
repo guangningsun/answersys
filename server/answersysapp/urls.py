@@ -20,6 +20,10 @@ urlpatterns = [
     path('submit_paper/',views.submit_paper),
     path('get_award_info/',views.get_award_info),
     path('get_user_award_info/',views.get_user_award_info),
+    path('submit_user_info/',views.submit_user_info),
+    path('revice_award/',views.revice_award),
+    
+    
 
     path('get_user_info_by_wxid/<weixin_id>', views.get_user_info_by_wxid),
     

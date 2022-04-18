@@ -56,6 +56,7 @@ class UserInfo(models.Model):
     join_union = models.DateField(verbose_name='入会时间')
     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
     pic_head = models.ImageField(u'头像',null=True, blank=True, upload_to='head_image')
+    desc = models.CharField(max_length=200,verbose_name='备注')
 
     
     class Meta:
