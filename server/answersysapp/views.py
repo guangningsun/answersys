@@ -375,7 +375,7 @@ def get_user_award_info(request):
         return Response(res_json)
 
 
-# 获取奖品信息
+# 领取奖品接口
 @api_view(['POST'])
 def revice_award(request):
     if request.method == 'POST':
@@ -384,3 +384,18 @@ def revice_award(request):
         res_json = {"error": 0,"msg": {
                     "awardlist": serializer.data }}
         return Response(res_json)
+
+#确认备注信息
+@api_view(['POST'])
+def submit_user_info(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        try:
+            user_info = UserInfo.objects.get(phone_number=phone_number)
+            user_info.desc = request.data["remark"]
+            user_info.save()
+            res_json = {"error": 0,"msg": "提交备注成功"}
+            return Response(res_json)
+        except:
+            res_json = {"error": 0,"msg": "提交备注失败"}
+            return Response(res_json)
