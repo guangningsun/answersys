@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /* 水平间距 */
 /* 水平间距 */
-view.data-v-410d3a86, scroll-view.data-v-410d3a86, swiper-item.data-v-410d3a86 {
+view.data-v-2548fb7e, scroll-view.data-v-2548fb7e, swiper-item.data-v-2548fb7e {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -9,9 +9,5 @@ view.data-v-410d3a86, scroll-view.data-v-410d3a86, swiper-item.data-v-410d3a86 {
   flex-basis: auto;
   align-items: stretch;
   align-content: flex-start;
-}
-.u-row.data-v-410d3a86 {
-  display: flex;
-  flex-direction: row;
 }
 

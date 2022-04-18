@@ -14,8 +14,11 @@
 			get_rankinfo:'get_rankinfo/',
 			get_answer_result:'get_answer_result/',
 			submit_paper:'submit_paper/',
-			get_award_info:'get_user_award_info/',
-			
+			get_user_award_info:'get_user_award_info/',
+			submit_user_info:'submit_user_info/',
+			get_award_info:'get_award_info/',
+			revice_award:'revice_award/',
+			 
 			
 			// key 值
 			key_user_name:'key_user_name',

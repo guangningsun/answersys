@@ -34,8 +34,8 @@
         },
         {
           "id": 1,
-          "name": "pages/answering/answering",
-          "pathName": "pages/answering/answering",
+          "name": "pages/award_choose/award_choose",
+          "pathName": "pages/award_choose/award_choose",
           "query": ""
         }
       ]

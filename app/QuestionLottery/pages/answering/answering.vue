@@ -12,6 +12,10 @@
 		</u-navbar>
 
 		<view class="u-demo-block" v-for="(item, index) in questionListShow" :key="index"  style="margin-top: 30upx; margin-bottom: 30upx; padding: 15upx; border-radius: 12upx; background-color: #FFFFFF;">
+			<view class="flex" style="margin-top: 5upx; margin-bottom: 5upx;">
+				<u-tag :text="item.type === '多选'? '多选题' :'单选题'" :type="item.type === '多选'? 'warning' : 'success'" plain plainFill style="width: 60upx;"></u-tag>
+				<text class="title text-bold text-lg text-black"></text>
+			</view>
 			<text class="title text-bold text-lg text-black">{{item.id}}. {{item.title}}</text>
 			<view class="u-demo-block__content" style="margin-top: 20upx;">
 				<view v-if=" item.type === '多选'" class="u-page__checkbox-item " >
@@ -25,7 +29,7 @@
 							:customStyle="{marginBottom: '16px'}"
 							v-for="(questionItem, index2) in item.chooseItems"
 							:key="index2"
-							:label="questionItem.item_content"
+							:label="questionItem.item_index + '. ' + questionItem.item_content"
 							:name="questionItem.item_index"
 						>
 						</u-checkbox>
@@ -42,7 +46,7 @@
 							:customStyle="{marginBottom: '16px'}"
 							v-for="(questionItem, index3) in item.chooseItems"
 							:key="index3"
-							:label="questionItem.item_content"
+							:label="questionItem.item_index + '. ' + questionItem.item_content"
 							:name="questionItem.item_index"
 						>
 						</u-radio>
@@ -77,57 +81,6 @@
 	export default {
 		data() {
 			return {
-				// questionList:[
-				// 	{
-				// 		id:1,
-				// 		title:'问题问题标题',
-				// 		type:'multi',
-				// 		right_answer:['A','B','C'],
-				// 		chooseItems:[
-				// 			{
-				// 				item_index:'A',
-				// 				item_content:'选项A内容'
-				// 			},
-				// 			{
-				// 				item_index:'B',
-				// 				item_content:'选项B内容'
-				// 			},
-				// 			{
-				// 				item_index:'C',
-				// 				item_content:'选项C内容'
-				// 			},
-				// 			{
-				// 				item_index:'D',
-				// 				item_content:'选项D内容'
-				// 			}
-				// 		]
-				// 	},
-				// 	{
-				// 		id:2,
-				// 		title:'问题问题标题2222',
-				// 		type:'single',
-				// 		right_answer:['A'],
-				// 		chooseItems:[
-				// 			{
-				// 				item_index:'A',
-				// 				item_content:'选项A内容222'
-				// 			},
-				// 			{
-				// 				item_index:'B',
-				// 				item_content:'选项B内容222'
-				// 			},
-				// 			{
-				// 				item_index:'C',
-				// 				item_content:'选项C内容222'
-				// 			},
-				// 			{
-				// 				item_index:'D',
-				// 				item_content:'选项D内容222' 
-				// 			}
-				// 		]
-				// 	},
-				// ],
-
 				
 				questionList:[],
 				
@@ -173,6 +126,7 @@
 			successSubmitCb(rsp) {
 				console.log('submit_paper success, rsp======');
 				console.log(rsp);
+				uni.hideLoading()
 				if(rsp.data.error === 0){
 					uni.navigateTo({
 						url: '/pages/answer_finish/answer_finish'
@@ -182,6 +136,7 @@
 			},
 			failSubmitCb(err) {
 				console.log('submit_paper failed', err);
+				uni.hideLoading()
 			},
 			completeSubmitCb(rsp) {},
 			
@@ -197,16 +152,22 @@
 				console.log('get result')
 				console.log(this.answerRadioValue)
 				
-				let item = this.questionListShow[0]
+				uni.showLoading({
+					title: '正在提交,请稍候....'
+				});
 				
-				let answerItem = {
-					pid: this.currentQuestionId, 
-					answer:this.answerRadioValue[item.id-1]
+				if(this.answerWithPid.length < this.questionList.length){
+					let item = this.questionListShow[0]
+					
+					let answerItem = {
+						pid: this.currentQuestionId, 
+						answer:this.answerRadioValue[item.id-1]
+					}
+					console.log('on onSubmit')
+					console.log(answerItem)
+					this.answerWithPid.push(answerItem)
+					console.log(this.answerWithPid)
 				}
-				console.log('on onSubmit')
-				console.log(answerItem)
-				this.answerWithPid.push(answerItem)
-				console.log(this.answerWithPid)
 				
 				let params = {
 					phone_number: uni.getStorageSync('key_phone_num'),
