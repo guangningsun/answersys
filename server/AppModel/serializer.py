@@ -7,7 +7,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInfo
-        fields = ('nick_name','user_name','weixin_openid','phone_number')
+        fields = ('user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head','desc')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -38,5 +38,5 @@ class AwardInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AwardInfo
-        fields = ('award_name','award_image','current_max')
+        fields = ('id','award_name','award_image','current_max')
 

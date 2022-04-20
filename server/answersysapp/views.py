@@ -99,7 +99,7 @@ def weixin_sns(request,js_code):
             session_key = json.loads(req.content)['session_key']
             # WeixinSessionKey.objects.update_or_create(weixin_openid=openid,
             #                                         weixin_sessionkey=session_key)
-            is_login = "1"
+            is_login = "1" #成功 0登录失败，跳转到身份认证
             # user_auth = "0"
             try:
                 wsk = WeixinSessionKey.objects.get(weixin_openid=openid)
@@ -137,19 +137,24 @@ def weixin_gusi(request):
             pc = WXBizDataCrypt(appId, sessionKey)
             res_data = pc.decrypt(encryptedData, iv)
             phone_number = res_data["phoneNumber"]
+            res_data["is_exist"] = "0" #不存在
             # 增加创建用户动作 openid phonenumber nickname
             try:
                 # 用户登录时判断用户是否存在
+                # userinfo = UserInfo.objects.get(weixin_openid=openid)
                 userinfo = UserInfo.objects.get(weixin_openid=openid)
-                # res_data["auth"]= userinfo.auth
-            except UserInfo.DoesNotExist:
-                # 不存在则创建新用户
-                userinfo = UserInfo(weixin_openid=openid,
-                                    phone_number=phone_number)
-                                    # ,auth="0")
-                userinfo.save()
-                # res_data["auth"] = "0"
-            return HttpResponse(json.dumps(res_data),content_type='application/json')
+                res_data["is_exist"] = "1"
+                return HttpResponse(json.dumps(res_data),content_type='application/json')
+            except :
+                try:
+                    ui = UserInfo.objects.get(phone_number=phone_number)
+                    ui.weixin_openid=openid
+                    ui.save()
+                    res_data["is_exist"] = "1"
+                    return HttpResponse(json.dumps(res_data),content_type='application/json')
+                except:
+                    res_data["is_exist"] = "0"
+                    return HttpResponse(json.dumps(res_data),content_type='application/json')
         except:
             return HttpResponse(json.dumps("{\"error\":1}"),content_type='application/json')
 
@@ -405,8 +410,24 @@ def submit_user_info(request):
             user_info = UserInfo.objects.get(phone_number=phone_number)
             user_info.desc = request.data["remark"]
             user_info.save()
-            res_json = {"error": 0,"msg": "提交备注成功"}
+            res_json = {"error": 0,"msg": "提交备注成功","is_update": True}
             return Response(res_json)
         except:
             res_json = {"error": 0,"msg": "提交备注失败"}
+            return Response(res_json)
+
+#更新身份信息
+@api_view(['POST'])
+def register_user(request):
+    if request.method == 'POST':
+        id_card = request.data["id_card"]
+        try:
+            user_info = UserInfo.objects.get(id_card=id_card)
+            user_info.phone_number = request.data["phone_number"]
+            user_info.weixin_openid = request.data["open_id"]
+            user_info.save()
+            res_json = {"error": 0,"msg": "更新信息成功"}
+            return Response(res_json)
+        except:
+            res_json = {"error": 0,"msg": "后台没有该用户请联系管理员"}
             return Response(res_json)
