@@ -431,3 +431,18 @@ def register_user(request):
         except:
             res_json = {"error": 0,"msg": "后台没有该用户请联系管理员"}
             return Response(res_json)
+
+#更新身份信息
+@api_view(['POST'])
+def get_award_history(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        try:
+            userawardinfoset = UserAward.objects.get(phone_number=phone_number)
+            serializer = UserAwardInfoSerializer(userawardinfoset, many=True)
+            res_json = {"error": 0,"msg": {
+                    "awardlist": serializer.data }}
+            return Response(res_json)
+        except:
+            res_json = {"error": 0,"msg": "没有该用户领奖信息"}
+            return Response(res_json)

@@ -23,6 +23,9 @@ urlpatterns = [
     path('submit_user_info/',views.submit_user_info),
     path('revice_award/',views.revice_award),
     path('register_user/',views.register_user),
+    path('get_award_history/',views.get_award_history),
+    
+
     
     
 
