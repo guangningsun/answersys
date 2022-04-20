@@ -390,6 +390,7 @@ def revice_award(request):
         try:
             user_info = UserInfo.objects.get(phone_number=phone_number)
             ua = UserAward(user_name=user_info.user_name,
+            phone_number=phone_number,
             company_address=user_info.company_name,
             award_name=AwardInfo.objects.get(id=award_id).award_name,
             labour_name=user_info.labour_union,

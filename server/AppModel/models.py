@@ -150,6 +150,7 @@ class UserAward(models.Model):
     company_address = models.CharField(max_length=200,verbose_name='单位地址')
     is_finished= models.BooleanField(verbose_name='是否已领奖品',default="False") 
     award_name = models.CharField(max_length=200,verbose_name='奖品信息')
+    revice_time = models.DateField(verbose_name='领奖时间',default=datetime.date.today)
     
     class Meta:
         verbose_name = '领奖信息'
