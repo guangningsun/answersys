@@ -357,9 +357,8 @@ def get_user_award_info(request):
         except KeyError as err:
             logger.error('参数错误.')
             return HttpResponseBadRequest()
-        try:
-            award = UserAward.objects.get(phone_number=phone_number)
-        except ObjectDoesNotExist as err:
+        awards = UserAward.objects.filter(phone_number=phone_number)
+        if awards.count() == 0:
             user_info = UserInfo.objects.get(phone_number=phone_number)
             company_info = CompanyInfo.objects.get(company_name=user_info.company_name)
             tmp = {}
@@ -370,7 +369,7 @@ def get_user_award_info(request):
             tmp['company_address'] = company_info.company_address
             res_json = {"error": 0,"msg": {"awardInfos": tmp }}
             return Response(res_json)
-
+        award = awards[0]
         tmp={}
         tmp['name'] = award.user_name
         tmp['tel'] = award.phone_number
