@@ -227,7 +227,8 @@ def submit_paper(request):
         total_score=100
         right_num = len(json.loads(answer_list))
         wrong_num = 0
-        for a in json.loads(answer_list):
+        al = json.loads(answer_list)
+        for a in al:
             qb_info = QuestionBank.objects.get(id=a["pid"])
             if qb_info.answer == a["answer"]:
                 continue
