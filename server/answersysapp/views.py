@@ -438,7 +438,7 @@ def get_award_history(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
         try:
-            userawardinfoset = UserAward.objects.get(phone_number=phone_number)
+            userawardinfoset = UserAward.objects.filter(phone_number=phone_number)
             serializer = UserAwardInfoSerializer(userawardinfoset, many=True)
             res_json = {"error": 0,"msg": {
                     "awardlist": serializer.data }}
