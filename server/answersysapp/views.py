@@ -290,7 +290,7 @@ def _get_questiondetail_by_id(pid):
         serializer = QuestionBankSerializer(qb_info_set,many=True)
         return serializer.data[0]
 
-
+# 获取排名
 @api_view(['GET'])
 def get_rankinfo(request):
     if request.method == 'GET':
@@ -317,6 +317,8 @@ def get_rankinfo(request):
                     "rankList": res }}
         return Response(res_json)
 
+
+#获取活动数量
 @api_view(['GET'])
 def get_award_num(request):
     if request.method == 'GET':
@@ -349,6 +351,7 @@ def get_award_info(request):
         return Response(res_json)
 
 
+# 获取领奖信息
 @api_view(['POST'])
 def get_user_award_info(request):
     if request.method == 'POST':
@@ -388,15 +391,42 @@ def revice_award(request):
         award_id = request.data["award_id"]
         try:
             user_info = UserInfo.objects.get(phone_number=phone_number)
-            ua = UserAward(user_name=user_info.user_name,
-            phone_number=phone_number,
-            company_address=user_info.company_name,
-            award_name=AwardInfo.objects.get(id=award_id).award_name,
-            labour_name=user_info.labour_union,
-            is_finished=True)
-            ua.save()   
-            res_json = {"error": 0,"msg":"已登记领奖"}
-            return Response(res_json)
+            #查看用户是否已经领奖
+            try:
+                uif = UserAward.objects.get(phone_number=phone_number)
+                if uif:
+                    res_json = {"error": 0,"msg":"已领奖无法再次领取"}
+                    return Response(res_json)
+                else:
+                    ua = UserAward(user_name=user_info.user_name,
+                    phone_number=phone_number,
+                    company_address=user_info.company_name,
+                    award_name=AwardInfo.objects.get(id=award_id).award_name,
+                    labour_name=user_info.labour_union,
+                    is_finished=True)
+                    ua.save()
+                    # 更新活动奖品数量
+                    ai = ActionInfo.objects.get(action_name='五一答题')
+                    ai.current_award_total = ai.current_award_total -1
+                    ai.current_remind_num = ai.current_remind_num -1
+                    ai.save()
+                    res_json = {"error": 0,"msg":"已登记领奖"}
+                    return Response(res_json)
+            except:
+                ua = UserAward(user_name=user_info.user_name,
+                    phone_number=phone_number,
+                company_address=user_info.company_name,
+                award_name=AwardInfo.objects.get(id=award_id).award_name,
+                labour_name=user_info.labour_union,
+                is_finished=True)
+                ua.save()
+                # 更新活动奖品数量
+                ai = ActionInfo.objects.get(action_name='五一答题')
+                ai.current_award_total = str(int(ai.current_award_total) -1)
+                ai.current_remind_num = str(int(ai.current_remind_num) -1)
+                ai.save()
+                res_json = {"error": 0,"msg":"已登记领奖"}
+                return Response(res_json)
         except:
             res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
             return Response(res_json)
