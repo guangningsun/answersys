@@ -15,6 +15,7 @@ from django.contrib import messages
 import time
 import decimal
 from datetime import datetime
+import os,qrcode
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -32,6 +33,17 @@ class CompanyInfoAdmin(ImportExportModelAdmin):
     fieldsets = [
        ('用户数据', {'fields': ['company_name','company_address','company_connect','company_phone','company_desc','prcode_image','prcode_url'], 'classes': ['']}),
     ]
+    actions = ["create_qrcode"]
+
+    def create_qrcode(self, request, queryset):
+        cmp_list = CompanyInfo.objects.all()
+        for cmp_info in cmp_list:
+            img_path = os.path.split(os.path.realpath(__file__))[0]+"/../media/prcode_image/"+cmp_info.company_name+".jpg"
+            qrcode.make("https://brilliantlife.com.cn:8020/media/qrcode/pages/index/index/"+str(cmp_info.id)).save(img_path)
+            cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
+            cmp_info.save()
+
+    create_qrcode.short_description = "更新二维码"
     list_per_page = 15
 
 # 用户管理
