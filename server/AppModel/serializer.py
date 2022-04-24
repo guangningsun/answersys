@@ -43,7 +43,7 @@ class AwardInfoSerializer(serializers.ModelSerializer):
 class UserAwardInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = UserAwardInfo
+        model = UserAward
         fields = ('user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name','revice_time')
 
     

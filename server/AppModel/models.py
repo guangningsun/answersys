@@ -121,10 +121,6 @@ class AwardInfo(models.Model):
     def __str__(self):
         return self.award_name
 
-# class award_chooseinfo
-#     award_name
-#     datetime（天为时间）
-#     choose_num
 
 class ActionInfo(models.Model):
     action_name = models.CharField(max_length=200,verbose_name='活动名称')

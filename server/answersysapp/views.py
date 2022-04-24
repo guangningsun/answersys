@@ -62,7 +62,8 @@ def create_qrcode(request):
                 # import pdb;pdb.set_trace()
                 cmp_info = CompanyInfo.objects.get(company_name=request.data["company_name"])
                 img_path = os.path.split(os.path.realpath(__file__))[0]+"/../media/prcode_image/"+cmp_info.company_name+".jpg"
-                qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
+                # qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
+                qrcode.make("https://brilliantlife.com.cn:8020/media/qrcode/pages/index/index?apart_id="+cmp_info.id).save(img_path)
                 cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
                 cmp_info.save()
                 context = {'cmp_info':cmp_info} 
@@ -437,9 +438,11 @@ def revice_award(request):
 def submit_user_info(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
+        apart_id = request.data["apart_id"]
         try:
             user_info = UserInfo.objects.get(phone_number=phone_number)
             user_info.desc = request.data["remark"]
+            user_info.company_name = CompanyInfo.objects.get(id=apart_id).company_name
             user_info.save()
             res_json = {"error": 0,"msg": "提交备注成功","is_update": True}
             return Response(res_json)
@@ -476,4 +479,19 @@ def get_award_history(request):
             return Response(res_json)
         except:
             res_json = {"error": 0,"msg": "没有该用户领奖信息"}
+            return Response(res_json)
+
+#获取是否在活动时间
+@api_view(['GET'])
+def is_in_activity_time(request):
+    if request.method == 'GET':
+        tpi = TestPaperInfo.objects.get(title='五一活动卷')
+        ct = datetime.datetime.now().utcnow()
+        st = tpi.starttime.replace(tzinfo=None)
+        et = tpi.endtime.replace(tzinfo=None)
+        if ct.__ge__(st) and ct.__le__(et):
+            res_json = {"error": 0,"msg": "活动开始","is_start": True}
+            return Response(res_json)
+        else:
+            res_json = {"error": 1,"msg": "活动尚未开始","is_start": False}
             return Response(res_json)
