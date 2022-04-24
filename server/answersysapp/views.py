@@ -63,7 +63,7 @@ def create_qrcode(request):
                 cmp_info = CompanyInfo.objects.get(company_name=request.data["company_name"])
                 img_path = os.path.split(os.path.realpath(__file__))[0]+"/../media/prcode_image/"+cmp_info.company_name+".jpg"
                 # qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
-                qrcode.make("https://brilliantlife.com.cn:8020/media/qrcode/pages/index/index?apart_id="+cmp_info.id).save(img_path)
+                qrcode.make("https://brilliantlife.com.cn:8020/media/qrcode/pages/index/index/"+str(cmp_info.id)).save(img_path)
                 cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
                 cmp_info.save()
                 context = {'cmp_info':cmp_info} 
@@ -391,17 +391,34 @@ def revice_award(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
         award_id = request.data["award_id"]
-        try:
-            user_info = UserInfo.objects.get(phone_number=phone_number)
-            #查看用户是否已经领奖
+        aicat = ActionInfo.objects.get(action_name='五一答题').current_award_total
+        if int(aicat)>0:
             try:
-                uif = UserAward.objects.get(phone_number=phone_number)
-                if uif:
-                    res_json = {"error": 0,"msg":"已领奖无法再次领取"}
-                    return Response(res_json)
-                else:
+                user_info = UserInfo.objects.get(phone_number=phone_number)
+                #查看用户是否已经领奖
+                try:
+                    uif = UserAward.objects.get(phone_number=phone_number)
+                    if uif:
+                        res_json = {"error": 0,"msg":"已领奖无法再次领取"}
+                        return Response(res_json)
+                    else:
+                        ua = UserAward(user_name=user_info.user_name,
+                        phone_number=phone_number,
+                        company_address=user_info.company_name,
+                        award_name=AwardInfo.objects.get(id=award_id).award_name,
+                        labour_name=user_info.labour_union,
+                        is_finished=True)
+                        ua.save()
+                        # 更新活动奖品数量
+                        ai = ActionInfo.objects.get(action_name='五一答题')
+                        ai.current_award_total = ai.current_award_total -1
+                        ai.current_remind_num = ai.current_remind_num -1
+                        ai.save()
+                        res_json = {"error": 0,"msg":"已登记领奖"}
+                        return Response(res_json)
+                except:
                     ua = UserAward(user_name=user_info.user_name,
-                    phone_number=phone_number,
+                        phone_number=phone_number,
                     company_address=user_info.company_name,
                     award_name=AwardInfo.objects.get(id=award_id).award_name,
                     labour_name=user_info.labour_union,
@@ -409,28 +426,16 @@ def revice_award(request):
                     ua.save()
                     # 更新活动奖品数量
                     ai = ActionInfo.objects.get(action_name='五一答题')
-                    ai.current_award_total = ai.current_award_total -1
-                    ai.current_remind_num = ai.current_remind_num -1
+                    ai.current_award_total = str(int(ai.current_award_total) -1)
+                    ai.current_remind_num = str(int(ai.current_remind_num) -1)
                     ai.save()
                     res_json = {"error": 0,"msg":"已登记领奖"}
                     return Response(res_json)
             except:
-                ua = UserAward(user_name=user_info.user_name,
-                    phone_number=phone_number,
-                company_address=user_info.company_name,
-                award_name=AwardInfo.objects.get(id=award_id).award_name,
-                labour_name=user_info.labour_union,
-                is_finished=True)
-                ua.save()
-                # 更新活动奖品数量
-                ai = ActionInfo.objects.get(action_name='五一答题')
-                ai.current_award_total = str(int(ai.current_award_total) -1)
-                ai.current_remind_num = str(int(ai.current_remind_num) -1)
-                ai.save()
-                res_json = {"error": 0,"msg":"已登记领奖"}
+                res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
                 return Response(res_json)
-        except:
-            res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
+        else:
+            res_json = {"error": 0,"msg":"活动火爆，物品已经领取完毕，请明日再参与"}
             return Response(res_json)
 
 #确认备注信息

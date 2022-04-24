@@ -127,7 +127,7 @@ class ActionInfo(models.Model):
     start_time = models.DateField(verbose_name='活动开始时间')
     end_time = models.DateField(verbose_name='活动结束时间')
     active_long = models.CharField(max_length=200,verbose_name='活动时长')
-    current_award_total = models.CharField(max_length=200,verbose_name='每天可领取奖品份数',default='2000')
+    current_award_total = models.CharField(max_length=200,verbose_name='每天可领取奖品份数',default='1800')
     award_total_num = models.CharField(max_length=200,verbose_name='奖品总数')
     current_remind_num = models.CharField(max_length=200,verbose_name='奖品剩余总量')
     

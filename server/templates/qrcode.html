@@ -138,35 +138,10 @@
     }
 
     function create_prcode(){
-        var csrftoken = readCookie('csrftoken');
-        $.ajax({
-            url: "/create_qrcode/", 
-            type: 'POST',
-            data: { company_name: document.getElementById("company_name").value }, 
-            dataType: 'json', 
-            headers:{"X-CSRFToken": csrftoken},
-            // contentType: "application/json",
-            success: function(res) {
-                console.log(res)
-                if (res["error"] == "0") {
-                    console.log(res["error"])
-                    var cmp_name = document.getElementById("cmp_name_id");
-                    var cmp_img = document.getElementById("cmp_img_id");
-                    cmp_name.innerText = res["cmp_name"];
-                    cmp_img.src="../media/"+res["cmp_img"];
-                    alert("二维码创建成功");
-                }
-                else if (res["error"] == "1"){
-                    alert("该公司不存在，请联系管理员")
-                }
-
-                $(".btn").attr('disabled', false);
-            },
-            error: function() {
-                alert("返回 error 该公司不存在，请联系管理员");
-                $(".btn").attr('disabled', false);
-            }
-        });
+        var cmp_name = document.getElementById("company_name").value;
+        var cmp_img = document.getElementById("cmp_img_id");
+        cmp_name.innerText = cmp_name;
+        cmp_img.src="../media/prcode_image/"+cmp_name+".jpg";
     }
 </script>
  </body>
