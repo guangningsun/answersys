@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>泰达群团</title>
+    <title>会员日普惠活动二维码申领</title>
     <meta name="description"
           content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -11,73 +11,13 @@
 </head>
 <body>
 <section class="hbox stretch"> <!-- .aside -->
-    <aside class="bg-dark aside-sm" id="nav">
-        <section class="vbox">
-            <header class="dker nav-bar"><a class="btn btn-link visible-xs"
-                                            data-toggle="class:nav-off-screen" data-target="body">
-                <i class="icon-reorder"></i> </a> <a href="#" class="nav-brand"
-                                                     data-toggle="fullscreen">泰达群团</a> <a
-                    class="btn btn-link visible-xs" data-toggle="class:show"
-                    data-target=".nav-user"> <i class="icon-comment-alt"></i> </a></header>
-            <footer class="footer bg-gradient hidden-xs"><a href="modal.lockme.html"
-                                                            data-toggle="ajaxModal"
-                                                            class="btn btn-sm btn-link m-r-n-xs pull-right">
-                <i class="icon-off"></i> </a> <a href="#nav" data-toggle="class:nav-vertical"
-                                                 class="btn btn-sm btn-link m-l-n-sm"> <i
-                    class="icon-reorder"></i> </a></footer>
-            <section>
-                <div class="lter nav-user hidden-xs pos-rlt">
-                    <div class="nav-avatar pos-rlt"><a href="#"
-                                                       class="thumb-sm avatar animated rollIn"
-                                                       > <img
-                            src="/static/images/avatar.jpg" alt="" class=""> <span
-                            class="caret caret-white"></span> </a>
-            
-                        <div class="visible-xs m-t m-b"><a href="#" class="h3">John.Smith</a>
-
-                            <p><i class="icon-map-marker"></i> London, UK</p></div>
-                    </div>
-                    <div class="nav-msg"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <b class="badge badge-white count-n">2</b> </a>
-                        <section class="dropdown-menu m-l-sm pull-left animated fadeInRight">
-                            <div class="arrow left"></div>
-                            <section class="panel bg-white">
-                                <header class="panel-heading"><strong>You have <span
-                                        class="count-n">2</span> notifications</strong></header>
-                                <div class="list-group"><a href="#" class="media list-group-item">
-                                    <span class="pull-left thumb-sm"> <img src="/static/images/avatar.jpg"
-                                                                           alt="John said"
-                                                                           class="img-circle"> </span>
-                                    <span class="media-body block m-b-none"> Use awesome animate.css<br> <small
-                                            class="text-muted">28 Aug 13
-                                    </small> </span> </a> <a href="#" class="media list-group-item">
-                                    <span class="media-body block m-b-none"> 1.0 initial released<br> <small
-                                            class="text-muted">27 Aug 13
-                                    </small> </span> </a></div>
-                                <footer class="panel-footer text-sm"><a href="#" class="pull-right"><i
-                                        class="icon-cog"></i></a> <a href="#">See all the
-                                    notifications</a></footer>
-                            </section>
-                        </section>
-                    </div>
-                </div>
-                <nav class="nav-primary hidden-xs">
-                    <ul class="nav">
-                        <li class="dropdown-submenu active"><a href="#" class="dropdown-toggle"
-                                                               data-toggle="dropdown"> <i
-                                class="icon-beaker"></i> <span>二维码申请</span> </a>
-                        </li>
-                    </ul>
-                </nav>
-            </section>
-        </section>
-    </aside>
+    
     <!-- /.aside --> <!-- .vbox -->
     <section id="content">
         <section class="vbox">
             <header class="header bg-dark bg-gradient">
                 <ul class="nav nav-tabs">
-                    <li class="active"><a href="#wizard" data-toggle="tab">二维码申请</a></li>
+                    <li class="active"><a href="#wizard" data-toggle="tab">会员日普惠活动二维码申领</a></li>
                 </ul>
             </header>
             <section class="scrollable wrapper">
@@ -90,29 +30,23 @@
                                     <li data-target="#step1" class="active"><span
                                             class="badge badge-info">1</span>第一步
                                     </li>
-                                    <li data-target="#step3"><span class="badge">2</span>第二步</li>
                                 </ul>
                             </div>
                             <div class="step-content">
                                 <form>
-                                    <div class="step-pane active" id="step1"><p>公司名称</p>
+                                    <div class="step-pane active" id="step1"><p>请输入单位名称</p>
                                         <input type="text" class="form-control" id="company_name"
                                                data-trigger="change" data-required="true"
                                                placeholder="输入公司名称">
-                                    </div>
-                                    <div class="step-pane" id="step3">
-                                        <label>公司名称：</label>
                                         <label id="cmp_name_id"></label><br>
                                         <label>入口二维码：</label>
                                         <img id="cmp_img_id"/>
                                     </div>
                                 </form>
                                 <div class="actions m-t">
-                                    <button type="button" class="btn btn-white btn-sm btn-next" onclick="create_prcode()">提交
+                                    <button type="button" class="btn btn-white btn-sm btn-next" onclick="create_prcode()">获取二维码
                                     </button>
-                                    <button type="button" class="btn btn-white btn-sm btn-next"
-                                            data-target="#form-wizard" data-wizard="next"
-                                            data-last="Finish" >显示
+                                    <button type="button" class="btn btn-white btn-sm btn-next" onclick="download_img()">下载图片
                                     </button>
                                 </div>
                             </div>
@@ -126,6 +60,16 @@
 <script src="/static/css/app.v1.js"></script>
 <script src="/static/admin/js/vendor/jquery/jquery.min.js"></script>
 <script>
+    function download_img(){
+        var rootpath='https://brilliantlife.com.cn:8020/'
+        var img = document.getElementById('cmp_img_id'); // 获取要下载的图片
+        var url = img.src;                            // 获取图片地址
+        var a = document.createElement('a');          // 创建一个a节点插入的document
+        var event = new MouseEvent('click')           // 模拟鼠标click点击事件
+        a.download = document.getElementById("company_name").value;                  // 设置a节点的download属性值
+        a.href = url;                                 // 将图片的src赋值给a节点的href
+        a.dispatchEvent(event)                        // 触发鼠标点击事件
+    }
     function readCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
