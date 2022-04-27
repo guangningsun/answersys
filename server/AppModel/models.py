@@ -147,6 +147,7 @@ class UserAward(models.Model):
     is_finished= models.BooleanField(verbose_name='是否已领奖品',default="False") 
     award_name = models.CharField(max_length=200,verbose_name='奖品信息')
     revice_time = models.DateField(verbose_name='领奖时间',default=datetime.date.today)
+    award_image = models.ImageField(u'奖品图片',null=True, blank=True, upload_to='award_image')
     
     class Meta:
         verbose_name = '领奖信息'

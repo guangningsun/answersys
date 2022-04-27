@@ -407,6 +407,7 @@ def revice_award(request):
                         company_address=user_info.company_name,
                         award_name=AwardInfo.objects.get(id=award_id).award_name,
                         labour_name=user_info.labour_union,
+                        award_image=AwardInfo.objects.get(id=award_id).award_image,
                         is_finished=True)
                         ua.save()
                         # 更新活动奖品数量
@@ -422,6 +423,7 @@ def revice_award(request):
                     company_address=user_info.company_name,
                     award_name=AwardInfo.objects.get(id=award_id).award_name,
                     labour_name=user_info.labour_union,
+                    award_image=AwardInfo.objects.get(id=award_id).award_image,
                     is_finished=True)
                     ua.save()
                     # 更新活动奖品数量
