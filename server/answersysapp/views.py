@@ -500,3 +500,21 @@ def is_in_activity_time(request):
         else:
             res_json = {"error": 1,"msg": "活动尚未开始","is_start": False}
             return Response(res_json)
+
+
+#是否是会员
+@api_view(['POST'])
+def is_member(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        try:
+            userinfolist = UserInfo.objects.filter(phone_number=phone_number)
+            if len(userinfolist) >0:
+                res_json = {"is_member": True,"msg": "success" }
+                return Response(res_json)
+            else:
+                res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+                return Response(res_json)
+        except:
+            res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+            return Response(res_json)
