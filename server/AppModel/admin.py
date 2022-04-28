@@ -16,6 +16,8 @@ import time
 import decimal
 from datetime import datetime
 import os,qrcode
+from import_export.tmp_storages import CacheStorage
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -49,6 +51,7 @@ class CompanyInfoAdmin(ImportExportModelAdmin):
 # 用户管理
 @admin.register(UserInfo)
 class UserInfoAdmin(ImportExportModelAdmin):
+    tmp_storage_class = CacheStorage
     list_display=['user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head','desc']
     search_fields =('user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head','desc')
     fieldsets = [

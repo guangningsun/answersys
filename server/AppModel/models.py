@@ -8,6 +8,7 @@ from django.utils.html import format_html
 from AppModel import *
 from multiselectfield import MultiSelectField
 
+
 class CompanyInfo(models.Model):
     company_name = models.CharField(max_length=200,verbose_name='公司名字')
     company_address = models.CharField(max_length=200,verbose_name='公司地址')
@@ -37,15 +38,15 @@ class UserInfo(models.Model):
     ]
     policy_roles = [
         ("0","党员"),
-        ("1","群员"),
+        ("1","团员"),
         ("2","群众"),
     ]
     user_name = models.CharField(max_length=200,verbose_name='用户名')
     nick_name = models.CharField(max_length=200,verbose_name='微信名')
-    gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice)
-    nation = models.CharField(max_length=200,verbose_name='民族', choices=nations)
-    policy_role = models.CharField(max_length=20,verbose_name='政治面貌', choices=policy_roles)
-    household = models.CharField(max_length=200,verbose_name='户籍类型')
+    gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice,default=1)
+    nation = models.CharField(max_length=200,verbose_name='民族', choices=nations,default=0)
+    policy_role = models.CharField(max_length=20,verbose_name='政治面貌', choices=policy_roles,default=2)
+    household = models.CharField(max_length=200,verbose_name='户籍类型',default="非农业")
     is_bd = models.BooleanField(verbose_name='是否八大群体',default="True")
     job_status = models.BooleanField(verbose_name='就业状态',default="True")
     id_card = models.CharField(max_length=200,verbose_name='身份证号')
@@ -56,7 +57,7 @@ class UserInfo(models.Model):
     join_union = models.DateField(verbose_name='入会时间',default=datetime.date.today)
     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
     pic_head = models.ImageField(u'头像',null=True, blank=True, upload_to='head_image')
-    desc = models.CharField(max_length=200,verbose_name='备注')
+    desc = models.CharField(max_length=200,verbose_name='备注',default='-')
 
     
     class Meta:
