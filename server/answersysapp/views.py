@@ -303,7 +303,7 @@ def get_rankinfo(request):
             if obj.phone_number in tmp_set:
                 continue
             try:
-                user_info = UserInfo.objects.get(phone_number=obj.phone_number)
+                user_info = UserInfo.objects.filter(phone_number=obj.phone_number)[0]
             except ObjectDoesNotExist as err:
                 logger.error('此员工不在员工列表中，ERR: %s' % err)
                 continue
