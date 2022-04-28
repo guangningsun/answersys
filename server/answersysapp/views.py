@@ -385,39 +385,41 @@ def get_user_award_info(request):
         return Response(res_json)
 
 
+def _compute_remind_award_num():
+     # 计算活动一共多少天 total_num 
+    aio = ActionInfo.objects.get(action_name='五一答题')
+    total_num = int(aio.active_long)
+     # 获取活动每天可领取奖品数量 default_num =1800
+    default_num = int(aio.current_award_total)
+     # 计算是活动第几天   cd = current_day  - start_day +1
+    cd = datetime.date(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day) - aio.start_time
+     # 活动剩余天数  remind_day = total_num -cd
+    rd = total_num - (cd.days+1)
+     # 获取活动共剩余奖品数量 remind_award_num
+    total_ra_num = int(aio.current_remind_num)
+     # 查看当天剩余奖品   remind_award_num = remind_award_num - 1800*remind_day
+    c_r_award_num = total_ra_num - default_num*rd
+    return c_r_award_num
+
+
 # 领取奖品接口
 @api_view(['POST'])
 def revice_award(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
         award_id = request.data["award_id"]
-        aicat = ActionInfo.objects.get(action_name='五一答题').current_award_total
-        if int(aicat)>0:
+        try:
+            user_info = UserInfo.objects.get(phone_number=phone_number)
+            #查看用户是否已经领奖
             try:
-                user_info = UserInfo.objects.get(phone_number=phone_number)
-                #查看用户是否已经领奖
-                try:
-                    uif = UserAward.objects.get(phone_number=phone_number)
-                    if uif:
-                        res_json = {"error": 0,"msg":"已领奖无法再次领取"}
-                        return Response(res_json)
-                    else:
-                        ua = UserAward(user_name=user_info.user_name,
-                        phone_number=phone_number,
-                        company_address=user_info.company_name,
-                        award_name=AwardInfo.objects.get(id=award_id).award_name,
-                        labour_name=user_info.labour_union,
-                        award_image=AwardInfo.objects.get(id=award_id).award_image,
-                        is_finished=True)
-                        ua.save()
-                        # 更新活动奖品数量
-                        ai = ActionInfo.objects.get(action_name='五一答题')
-                        ai.current_award_total = ai.current_award_total -1
-                        ai.current_remind_num = ai.current_remind_num -1
-                        ai.save()
-                        res_json = {"error": 0,"msg":"已登记领奖"}
-                        return Response(res_json)
-                except:
+                uif = UserAward.objects.get(phone_number=phone_number)
+                # 如果有领取记录则回复 不能再领
+                res_json = {"error": 0,"msg":"已领奖无法再次领取"}
+                return Response(res_json)
+                # 如果  
+            except:
+                # 如果没有领取记录，且当天还有奖品可领
+                if _compute_remind_award_num > 0 :
                     ua = UserAward(user_name=user_info.user_name,
                         phone_number=phone_number,
                     company_address=user_info.company_name,
@@ -428,17 +430,17 @@ def revice_award(request):
                     ua.save()
                     # 更新活动奖品数量
                     ai = ActionInfo.objects.get(action_name='五一答题')
-                    ai.current_award_total = str(int(ai.current_award_total) -1)
                     ai.current_remind_num = str(int(ai.current_remind_num) -1)
                     ai.save()
                     res_json = {"error": 0,"msg":"已登记领奖"}
                     return Response(res_json)
-            except:
-                res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
-                return Response(res_json)
-        else:
-            res_json = {"error": 0,"msg":"活动火爆，物品已经领取完毕，请明日再参与"}
+                else:
+                    res_json = {"error": 0,"msg":"活动火爆，物品已经领取完毕，请明日再参与"}
+                    return Response(res_json)
+        except:
+            res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
             return Response(res_json)
+
 
 #确认备注信息
 @api_view(['POST'])

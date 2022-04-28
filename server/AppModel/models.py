@@ -53,7 +53,7 @@ class UserInfo(models.Model):
     mig_worker = models.BooleanField(verbose_name='是否农民工',default="True")
     company_name = models.CharField(max_length=200,verbose_name='单位名称')
     labour_union = models.CharField(max_length=200,verbose_name='所属工会')
-    join_union = models.DateField(verbose_name='入会时间')
+    join_union = models.DateField(verbose_name='入会时间',default=datetime.date.today)
     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
     pic_head = models.ImageField(u'头像',null=True, blank=True, upload_to='head_image')
     desc = models.CharField(max_length=200,verbose_name='备注')

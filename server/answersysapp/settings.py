@@ -130,7 +130,7 @@ SIMPLEUI_CONFIG = {
             'url': 'AppModel/examscore',
             'icon': 'fa fa-server'
         },{
-            'name': '奖品份数管理',
+            'name': '活动管理',
             'url': 'AppModel/actioninfo',
             'icon': 'fa fa-server'
         },{
