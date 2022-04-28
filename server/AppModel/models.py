@@ -58,7 +58,8 @@ class UserInfo(models.Model):
     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
     pic_head = models.ImageField(u'头像',null=True, blank=True, upload_to='head_image')
     desc = models.CharField(max_length=200,verbose_name='备注',default='-')
-
+    
+    
     
     class Meta:
         verbose_name = '用户信息'

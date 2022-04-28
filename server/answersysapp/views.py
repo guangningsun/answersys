@@ -214,7 +214,7 @@ def get_answer_result(request):
                 ans_res["hint"]="恭喜您获得满分！您有机会获选择会员日普惠商品一件"
             else:
                 ans_res["hint"]="继续努力"
-            ans_res["remain"] = ActionInfo.objects.all()[0].current_award_total
+            ans_res["remain"] = _compute_remind_award_num()
             res_json = {"error": 0,"msg": {
                         "answer_result": ans_res }}
             return Response(res_json)
@@ -303,7 +303,9 @@ def get_rankinfo(request):
             if obj.phone_number in tmp_set:
                 continue
             try:
-                user_info = UserInfo.objects.filter(phone_number=obj.phone_number)[0]
+                ul = UserInfo.objects.filter(phone_number=obj.phone_number)
+                if len(ul)>0:
+                    user_info = ul[0]
             except ObjectDoesNotExist as err:
                 logger.error('此员工不在员工列表中，ERR: %s' % err)
                 continue
@@ -324,6 +326,7 @@ def get_rankinfo(request):
 @api_view(['GET'])
 def get_award_num(request):
     if request.method == 'GET':
+        r_num = int(_compute_remind_award_num())
         award_info = ActionInfo.objects.filter(start_time__lte=datetime.datetime.now(),end_time__gte=datetime.datetime.now()).order_by('start_time')
         logger.info('award_info: %s' % award_info.count())
         if award_info.count() == 0:
@@ -336,7 +339,7 @@ def get_award_num(request):
         res_json = {
             "error":1,
             "msg": {
-                "award": obj.current_award_total
+                "award": r_num
             }
         }
         return Response(res_json)
@@ -408,6 +411,7 @@ def revice_award(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
         award_id = request.data["award_id"]
+        apart_id = request.data["apart_id"]
         try:
             user_info = UserInfo.objects.get(phone_number=phone_number)
             #查看用户是否已经领奖
@@ -423,6 +427,7 @@ def revice_award(request):
                     ua = UserAward(user_name=user_info.user_name,
                         phone_number=phone_number,
                     company_address=user_info.company_name,
+                    company_name=CompanyInfo.objects.get(id=apart_id).company_name,
                     award_name=AwardInfo.objects.get(id=award_id).award_name,
                     labour_name=user_info.labour_union,
                     award_image=AwardInfo.objects.get(id=award_id).award_image,
