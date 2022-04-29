@@ -299,7 +299,11 @@ def get_rankinfo(request):
         rank_info = ExamScore.objects.all().order_by('-score')
         res = []
         tmp_set = set()
+        i=0
         for obj in rank_info:
+            i= i+1
+            if i > 20:
+                break
             if obj.phone_number in tmp_set:
                 continue
             try:
