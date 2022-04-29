@@ -440,10 +440,10 @@ def revice_award(request):
                     res_json = {"error": 0,"msg":"已登记领奖"}
                     return Response(res_json)
                 else:
-                    res_json = {"error": 0,"msg":"活动火爆，物品已经领取完毕，请明日再参与"}
+                    res_json = {"error": 0,"msg":"恭喜您获得满分！活动火热，普惠商品已被领空，请明日在来"}
                     return Response(res_json)
         except:
-            res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
+            res_json = {"error": 0,"msg":"领取物品失败，请您扫描二维码参加活动或联系技术人员！"}
             return Response(res_json)
 
 
