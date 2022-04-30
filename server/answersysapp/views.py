@@ -239,18 +239,24 @@ def submit_paper(request):
                 wrong_num = wrong_num +1
         if total_score<= 0:
             total_score=0
-        ui = UserInfo.objects.get(phone_number=user_phone_number)
-        es = ExamScore(user_name = ui.user_name,
-                        phone_number = user_phone_number,
-                        company_name = ui.company_name, 
-                        score =  total_score,
-                        right_num =  right_num,
-                        wrong_num =  wrong_num)
-        es.save()
-        res_json ={}
-        res_json["error"]=0
-        res_json["msg"]="提交成功"
-        return Response(res_json)
+        logger.info('user phone_number is: %s submit paper' % (user_phone_number))
+        try:
+            ui = UserInfo.objects.get(phone_number=user_phone_number)
+            es = ExamScore(user_name = ui.user_name,
+                            phone_number = user_phone_number,
+                            company_name = ui.company_name, 
+                            score =  total_score,
+                            right_num =  right_num,
+                            wrong_num =  wrong_num)
+            es.save()
+            res_json ={}
+            res_json["error"]=0
+            res_json["msg"]="提交成功"
+            return Response(res_json)
+        except:
+            res_json["error"]=0
+            res_json["msg"]="未进行手机号认证，请点击手机号登录"
+            return Response(res_json)
                     
 
 # 获取试卷信息
@@ -417,35 +423,40 @@ def revice_award(request):
         award_id = request.data["award_id"]
         apart_id = request.data["apart_id"]
         try:
-            user_info = UserInfo.objects.get(phone_number=phone_number)
-            #查看用户是否已经领奖
-            try:
-                uif = UserAward.objects.get(phone_number=phone_number)
-                # 如果有领取记录则回复 不能再领
-                res_json = {"error": 0,"msg":"已领奖无法再次领取"}
+            if datetime.datetime.now().hour >=9:
+                user_info = UserInfo.objects.get(phone_number=phone_number)
+                #查看用户是否已经领奖
+                try:
+                    uif = UserAward.objects.get(phone_number=phone_number)
+                    # 如果有领取记录则回复 不能再领
+                    res_json = {"error": 0,"msg":"已领奖无法再次领取"}
+                    return Response(res_json)
+                    # 如果  
+                except:
+                    # 如果没有领取记录，且当天还有奖品可领
+                    if _compute_remind_award_num() > 0 :
+                        cpi = CompanyInfo.objects.get(id=apart_id)
+                        ua = UserAward(user_name=user_info.user_name,
+                            phone_number=phone_number,
+                        company_address=cpi.company_address,
+                        company_name=cpi.company_name,
+                        award_name=AwardInfo.objects.get(id=award_id).award_name,
+                        labour_name=user_info.labour_union,
+                        award_image=AwardInfo.objects.get(id=award_id).award_image,
+                        is_finished=True)
+                        ua.save()
+                        # 更新活动奖品数量
+                        ai = ActionInfo.objects.get(action_name='五一答题')
+                        ai.current_remind_num = str(int(ai.current_remind_num) -1)
+                        ai.save()
+                        res_json = {"error": 0,"msg":"已登记领奖"}
+                        return Response(res_json)
+                    else:
+                        res_json = {"error": 0,"msg":"恭喜您获得满分！活动火热，普惠商品已被领空，请明日在来"}
+                        return Response(res_json)
+            else:
+                res_json = {"error": 0,"msg":"上午9:00才能开抢哦！"}
                 return Response(res_json)
-                # 如果  
-            except:
-                # 如果没有领取记录，且当天还有奖品可领
-                if _compute_remind_award_num > 0 :
-                    ua = UserAward(user_name=user_info.user_name,
-                        phone_number=phone_number,
-                    company_address=user_info.company_name,
-                    company_name=CompanyInfo.objects.get(id=apart_id).company_name,
-                    award_name=AwardInfo.objects.get(id=award_id).award_name,
-                    labour_name=user_info.labour_union,
-                    award_image=AwardInfo.objects.get(id=award_id).award_image,
-                    is_finished=True)
-                    ua.save()
-                    # 更新活动奖品数量
-                    ai = ActionInfo.objects.get(action_name='五一答题')
-                    ai.current_remind_num = str(int(ai.current_remind_num) -1)
-                    ai.save()
-                    res_json = {"error": 0,"msg":"已登记领奖"}
-                    return Response(res_json)
-                else:
-                    res_json = {"error": 0,"msg":"恭喜您获得满分！活动火热，普惠商品已被领空，请明日在来"}
-                    return Response(res_json)
         except:
             res_json = {"error": 0,"msg":"领取物品失败，请您扫描二维码参加活动或联系技术人员！"}
             return Response(res_json)
