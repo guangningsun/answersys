@@ -117,7 +117,7 @@ class ActionInfoAdmin(admin.ModelAdmin):
 
 # 领奖管理
 @admin.register(UserAward)
-class UserAwardAdmin(admin.ModelAdmin): 
+class UserAwardAdmin(ImportExportModelAdmin): 
     list_display=['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name','revice_time',"award_image"]
     search_fields =('user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name','revice_time',"award_image")
     fieldsets = [

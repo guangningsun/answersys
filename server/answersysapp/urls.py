@@ -26,6 +26,8 @@ urlpatterns = [
     path('get_award_history/',views.get_award_history),
     path('is_in_activity_time/',views.is_in_activity_time),
     path('is_member/',views.is_member),
+    path('get_prize_info/',views.get_prize_info),
+    
     
     
 

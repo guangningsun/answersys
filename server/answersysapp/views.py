@@ -254,6 +254,7 @@ def submit_paper(request):
             res_json["msg"]="提交成功"
             return Response(res_json)
         except:
+            res_json ={}
             res_json["error"]=0
             res_json["msg"]="未进行手机号认证，请点击手机号登录"
             return Response(res_json)
@@ -542,3 +543,37 @@ def is_member(request):
         except:
             res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
             return Response(res_json)
+
+
+#判断抽奖结果
+@api_view(['POST'])
+def get_prize_info(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        try:
+            prize_list=[]
+            a ={"id":1,"desc":'中奖了'}
+            b ={"id":2,"desc":'谢谢'}
+            c ={"id":3,"desc":'中奖了'}
+            d ={"id":4,"desc":'谢谢'}
+            prize_list.append(a)
+            prize_list.append(b)
+            prize_list.append(c)
+            prize_list.append(d)
+            prize_info={"prize_list":prize_list}
+            prize_result = {"id":1,"name":'iphone',"img":"url"}
+            prize_info={"prize_list":prize_list,'prize_result':prize_result}
+            return Response({"prize_info":prize_info})
+
+            # 获取当前用户信息，并判断用户是否已经抽奖
+            # userinfolist = UserInfo.objects.filter(phone_number=phone_number)
+            # if len(userinfolist) >0:
+                # res_json = {"is_member": True,"msg": "success" }
+                # return Response(res_json)
+            # else:
+                # res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+                # return Response(res_json)
+        except:
+            pass
+            # res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+            # return Response(res_json)
