@@ -231,7 +231,10 @@ def submit_paper(request):
         al = json.loads(answer_list)
         for a in al:
             qb_info = QuestionBank.objects.get(id=a["pid"])
-            if qb_info.answer == a["answer"]:
+            tmp_qb = qb_info.answer
+            if len(qb_info.answer) == 1:
+                tmp_qb = qb_info.answer[0]
+            if tmp_qb == a["answer"]:
                 continue
             else:
                 total_score = total_score - qb_info.score
@@ -563,7 +566,8 @@ def get_prize_info(request):
             prize_list.append(d)
             prize_info={"prize_list":prize_list}
             prize_result = {"id":1,"name":'iphone',"img": pi.prize_image.name}
-            prize_info={"prize_list":prize_list,'prize_result':prize_result}
+            prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':1}
+
             return Response({"prize_info":prize_info})
 
             # 获取当前用户信息，并判断用户是否已经抽奖

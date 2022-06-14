@@ -172,6 +172,11 @@ class WeixinSessionKey(models.Model):
 class PrizeInfo(models.Model):
     prize_name = models.CharField(max_length=200,verbose_name='奖品名字')
     prize_image = models.ImageField(u'奖品图片',null=True, blank=True, upload_to='prize_image')
+    action_long = models.CharField(max_length=200,verbose_name='活动时长',default='2')
+    current_award_total = models.CharField(max_length=200,verbose_name='每天奖品份数',default='2000')
+    award_total_num = models.CharField(max_length=200,verbose_name='奖品总数')
+    current_remind_num = models.CharField(max_length=200,verbose_name='奖品剩余总量')
+    prize_probability = models.CharField(max_length=200,verbose_name='中奖概率')
     
     class Meta:
         verbose_name = '抽奖信息'
@@ -180,8 +185,14 @@ class PrizeInfo(models.Model):
     def __str__(self):
         return self.prize_name
 
-# 抽奖中奖信息
+# 中奖信息
 class UserPrizeInfo(models.Model):
-    prize_name 
+    user_name = models.CharField(max_length=200,verbose_name='用户名')
+    phone_number = models.CharField(max_length=200,verbose_name='手机号码')
+    labour_name = models.CharField(max_length=200,verbose_name='工会名称')
+    company_name = models.CharField(max_length=200,verbose_name='所答考卷单位')
+    company_address = models.CharField(max_length=200,verbose_name='单位地址')
+    prize_name = models.CharField(max_length=200,verbose_name='奖品信息')
+    revice_time = models.DateField(verbose_name='领奖时间',default=datetime.date.today)
 
 

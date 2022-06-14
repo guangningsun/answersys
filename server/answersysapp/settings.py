@@ -142,8 +142,12 @@ SIMPLEUI_CONFIG = {
             'url': 'AppModel/useraward',
             'icon': 'fa fa-server'
         },{
-            'name': '抽奖信息',
+            'name': '抽奖管理',
             'url': 'AppModel/prizeinfo',
+            'icon': 'fa fa-server'
+        },{
+            'name': '中奖信息',
+            'url': 'AppModel/userprizeinfo',
             'icon': 'fa fa-server'
         }]
         },{

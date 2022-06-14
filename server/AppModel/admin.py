@@ -76,13 +76,26 @@ class AwardInfoAdmin(ImportExportModelAdmin):
 # 抽奖管理
 @admin.register(PrizeInfo)
 class PrizeInfoAdmin(ImportExportModelAdmin): 
-    list_display=['prize_name','prize_image']
-    search_fields =('prize_name','prize_image')
+    list_display=['prize_name','prize_image','action_long','current_award_total','award_total_num','current_remind_num','prize_probability']
+    search_fields =('prize_name','prize_image','action_long','current_award_total','award_total_num','current_remind_num','prize_probability')
     fieldsets = [
-       ('用户数据', {'fields': ['prize_name','prize_image'], 'classes': ['']}),
+       ('用户数据', {'fields': ['prize_name','prize_image','action_long','current_award_total','award_total_num','current_remind_num','prize_probability'], 'classes': ['']}),
+    ]
+    list_per_page = 15 
+    
+
+
+# 中奖管理
+@admin.register(UserPrizeInfo)
+class UserPrizeInfoAdmin(ImportExportModelAdmin): 
+    list_display=['user_name','phone_number','labour_name','company_name','company_address','prize_name','revice_time']
+    search_fields =('user_name','phone_number','labour_name','company_name','company_address','prize_name','revice_time')
+    fieldsets = [
+       ('用户数据', {'fields': ['user_name','phone_number','labour_name','company_name','company_address','prize_name','revice_time'], 'classes': ['']}),
     ]
     list_per_page = 15 
 
+    
 
 # 题库管理
 @admin.register(QuestionBank)
