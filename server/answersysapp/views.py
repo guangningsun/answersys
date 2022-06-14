@@ -22,6 +22,7 @@ from AppModel.WXBizDataCrypt import WXBizDataCrypt
 from django.conf import settings
 import qrcode,os
 from django.core.exceptions import ObjectDoesNotExist
+import random
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -404,7 +405,7 @@ def get_user_award_info(request):
 
 def _compute_remind_award_num():
      # 计算活动一共多少天 total_num 
-    aio = ActionInfo.objects.get(action_name='五一答题')
+    aio = ActionInfo.objects.get(action_name='安全月活动第一次')
     total_num = int(aio.active_long)
      # 获取活动每天可领取奖品数量 default_num =1800
     default_num = int(aio.current_award_total)
@@ -450,7 +451,7 @@ def revice_award(request):
                         is_finished=True)
                         ua.save()
                         # 更新活动奖品数量
-                        ai = ActionInfo.objects.get(action_name='五一答题')
+                        ai = ActionInfo.objects.get(action_name='安全月活动第一次')
                         ai.current_remind_num = str(int(ai.current_remind_num) -1)
                         ai.save()
                         res_json = {"error": 0,"msg":"已登记领奖"}
@@ -553,7 +554,13 @@ def is_member(request):
 def get_prize_info(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
-        pi = PrizeInfo.objects.get(prize_name="毛巾")
+        apart_id = request.data["apart_id"]
+        pi = PrizeInfo.objects.get(prize_name="百事可乐一包")
+        upl = UserPrizeInfo.objects.filter(phone_number=phone_number)
+        user_info = UserInfo.objects.get(phone_number=phone_number)
+        can_lottery = 1
+        if len(upl) > 0:
+            can_lottery = 0
         try:
             prize_list=[]
             a ={"id":1,"desc":'中奖了'}
@@ -565,20 +572,28 @@ def get_prize_info(request):
             prize_list.append(c)
             prize_list.append(d)
             prize_info={"prize_list":prize_list}
-            prize_result = {"id":1,"name":'iphone',"img": pi.prize_image.name}
-            prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':1}
-
+            x = random.randint(0,100)
+            name = pi.prize_name
+            if x> int(float(pi.prize_probability)*100):
+                name = "谢谢"
+            prize_result = {"id":1,"name":name,"img": pi.prize_image.name}
+            prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':can_lottery}
+            # 登记领奖
+            if int(pi.current_remind_num) > 0 :
+                cpi = CompanyInfo.objects.get(id=apart_id)
+                ua = UserPrizeInfo(user_name=user_info.user_name,
+                    phone_number=phone_number,
+                company_address=cpi.company_address,
+                company_name=cpi.company_name,
+                prize_name=pi.prize_name,
+                labour_name=user_info.labour_union)
+                ua.save()
+                # 更新活动奖品数量
+                pi.current_remind_num = str(int(pi.current_remind_num) -1)
+                pi.save()
             return Response({"prize_info":prize_info})
-
-            # 获取当前用户信息，并判断用户是否已经抽奖
-            # userinfolist = UserInfo.objects.filter(phone_number=phone_number)
-            # if len(userinfolist) >0:
-                # res_json = {"is_member": True,"msg": "success" }
-                # return Response(res_json)
-            # else:
-                # res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
-                # return Response(res_json)
         except:
             pass
             # res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
             # return Response(res_json)
+

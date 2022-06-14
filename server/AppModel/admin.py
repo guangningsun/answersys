@@ -76,10 +76,10 @@ class AwardInfoAdmin(ImportExportModelAdmin):
 # 抽奖管理
 @admin.register(PrizeInfo)
 class PrizeInfoAdmin(ImportExportModelAdmin): 
-    list_display=['prize_name','prize_image','action_long','current_award_total','award_total_num','current_remind_num','prize_probability']
-    search_fields =('prize_name','prize_image','action_long','current_award_total','award_total_num','current_remind_num','prize_probability')
+    list_display=['prize_name','prize_image','current_remind_num','prize_probability']
+    search_fields =('prize_name','prize_image','current_remind_num','prize_probability')
     fieldsets = [
-       ('用户数据', {'fields': ['prize_name','prize_image','action_long','current_award_total','award_total_num','current_remind_num','prize_probability'], 'classes': ['']}),
+       ('用户数据', {'fields': ['prize_name','prize_image','current_remind_num','prize_probability'], 'classes': ['']}),
     ]
     list_per_page = 15 
     
