@@ -73,6 +73,17 @@ class AwardInfoAdmin(ImportExportModelAdmin):
     list_per_page = 15 
 
 
+# 抽奖管理
+@admin.register(PrizeInfo)
+class PrizeInfoAdmin(ImportExportModelAdmin): 
+    list_display=['prize_name','prize_image']
+    search_fields =('prize_name','prize_image')
+    fieldsets = [
+       ('用户数据', {'fields': ['prize_name','prize_image'], 'classes': ['']}),
+    ]
+    list_per_page = 15 
+
+
 # 题库管理
 @admin.register(QuestionBank)
 class QuestionBankAdmin(ImportExportModelAdmin): 

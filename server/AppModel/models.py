@@ -168,4 +168,20 @@ class WeixinSessionKey(models.Model):
         verbose_name = '微信用户SK'
         verbose_name_plural = '微信用户SK'
 
+# 抽奖设定信息
+class PrizeInfo(models.Model):
+    prize_name = models.CharField(max_length=200,verbose_name='奖品名字')
+    prize_image = models.ImageField(u'奖品图片',null=True, blank=True, upload_to='prize_image')
+    
+    class Meta:
+        verbose_name = '抽奖信息'
+        verbose_name_plural = '抽奖信息'
+    
+    def __str__(self):
+        return self.prize_name
+
+# 抽奖中奖信息
+class UserPrizeInfo(models.Model):
+    prize_name 
+
 

@@ -550,6 +550,7 @@ def is_member(request):
 def get_prize_info(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
+        pi = PrizeInfo.objects.get(prize_name="毛巾")
         try:
             prize_list=[]
             a ={"id":1,"desc":'中奖了'}
@@ -561,7 +562,7 @@ def get_prize_info(request):
             prize_list.append(c)
             prize_list.append(d)
             prize_info={"prize_list":prize_list}
-            prize_result = {"id":1,"name":'iphone',"img":"url"}
+            prize_result = {"id":1,"name":'iphone',"img": pi.prize_image.name}
             prize_info={"prize_list":prize_list,'prize_result':prize_result}
             return Response({"prize_info":prize_info})
 
