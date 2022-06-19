@@ -212,7 +212,7 @@ def get_answer_result(request):
             ans_res ={}
             ans_res["score"]= eslist.score
             if eslist.score == 100:
-                ans_res["hint"]="恭喜您获得满分！您有机会获选择会员日普惠商品一件"
+                ans_res["hint"]="恭喜您获得满分！您获得1次抽奖机会"
             else:
                 ans_res["hint"]="继续努力"
             ans_res["remain"] = _compute_remind_award_num()
@@ -538,14 +538,21 @@ def is_member(request):
         phone_number = request.data["phone_number"]
         try:
             userinfolist = UserInfo.objects.filter(phone_number=phone_number)
+            can_get_prize = True
+            try:
+                upi = UserPrizeInfo.objects.filter(phone_number=phone_number)
+                if len(upi)>0:
+                    can_get_prize =False
+            except:
+                pass
             if len(userinfolist) >0:
-                res_json = {"is_member": True,"msg": "success" }
+                res_json = {"is_member": True,"msg": "success" ,'can_get_prize':can_get_prize}
                 return Response(res_json)
             else:
-                res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+                res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员",'can_get_prize':can_get_prize}
                 return Response(res_json)
         except:
-            res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+            res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员",'can_get_prize':can_get_prize}
             return Response(res_json)
 
 
@@ -572,28 +579,47 @@ def get_prize_info(request):
             prize_list.append(c)
             prize_list.append(d)
             prize_info={"prize_list":prize_list}
-            x = random.randint(0,100)
-            name = pi.prize_name
-            if x> int(float(pi.prize_probability)*100):
-                name = "谢谢"
-            prize_result = {"id":1,"name":name,"img": pi.prize_image.name}
-            prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':can_lottery}
-            # 登记领奖
-            if int(pi.current_remind_num) > 0 :
-                cpi = CompanyInfo.objects.get(id=apart_id)
-                ua = UserPrizeInfo(user_name=user_info.user_name,
-                    phone_number=phone_number,
-                company_address=cpi.company_address,
-                company_name=cpi.company_name,
-                prize_name=pi.prize_name,
-                labour_name=user_info.labour_union)
-                ua.save()
-                # 更新活动奖品数量
-                pi.current_remind_num = str(int(pi.current_remind_num) -1)
-                pi.save()
-            return Response({"prize_info":prize_info})
+            if can_lottery == 1:
+                x = random.randint(0,100)
+                name = pi.prize_name
+                id = 1
+                is_prized = True
+                if x> int(float(pi.prize_probability)*100) or int(pi.current_remind_num) <=0:
+                    name = "谢谢,未中奖"
+                    id = -1
+                    is_prized = False
+                prize_result = {"id":id,"name":name,"img": pi.prize_image.name}
+                prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':can_lottery}
+                # 登记中奖信息
+                if int(pi.current_remind_num) > 0 :
+                    cpi = CompanyInfo.objects.get(id=apart_id)
+                    ua = UserPrizeInfo(user_name=user_info.user_name,
+                        phone_number=phone_number,
+                    company_address=cpi.company_address,
+                    company_name=cpi.company_name,
+                    prize_name=pi.prize_name,
+                    labour_name=user_info.labour_union,
+                    is_prized=is_prized)
+                    ua.save()
+                    # 更新活动奖品数量
+                    pi.current_remind_num = str(int(pi.current_remind_num) -1)
+                    pi.save()
+                else:
+                    cpi = CompanyInfo.objects.get(id=apart_id)
+                    ua = UserPrizeInfo(user_name=user_info.user_name,
+                        phone_number=phone_number,
+                    company_address=cpi.company_address,
+                    company_name=cpi.company_name,
+                    prize_name=pi.prize_name,
+                    labour_name=user_info.labour_union,
+                    is_prized=is_prized)
+                    ua.save()
+                return Response({"prize_info":prize_info})
+            else:
+                prize_result = {"id":1,"name":pi.prize_name,"img": pi.prize_image.name}
+                prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':can_lottery}
+
         except:
-            pass
-            # res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
-            # return Response(res_json)
+            res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+            return Response(res_json)
 

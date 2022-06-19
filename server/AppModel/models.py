@@ -177,7 +177,8 @@ class PrizeInfo(models.Model):
     award_total_num = models.CharField(max_length=200,verbose_name='奖品总数')
     current_remind_num = models.CharField(max_length=200,verbose_name='奖品剩余总量')
     prize_probability = models.CharField(max_length=200,verbose_name='中奖概率')
-    
+    can_get_prize = models.BooleanField(verbose_name='抽奖后是否可答题',default="False")
+
     class Meta:
         verbose_name = '抽奖信息'
         verbose_name_plural = '抽奖信息'
@@ -194,5 +195,6 @@ class UserPrizeInfo(models.Model):
     company_address = models.CharField(max_length=200,verbose_name='单位地址')
     prize_name = models.CharField(max_length=200,verbose_name='奖品信息')
     revice_time = models.DateField(verbose_name='领奖时间',default=datetime.date.today)
+    is_prized = models.BooleanField(verbose_name='是否中奖',default="False") 
 
 
