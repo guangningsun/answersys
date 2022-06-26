@@ -15,6 +15,10 @@ from django.contrib import messages
 import time
 import decimal
 from datetime import datetime
+import os,qrcode
+from import_export.tmp_storages import CacheStorage
+from  .resource import UserInfoResource
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -32,11 +36,24 @@ class CompanyInfoAdmin(ImportExportModelAdmin):
     fieldsets = [
        ('用户数据', {'fields': ['company_name','company_address','company_connect','company_phone','company_desc','prcode_image','prcode_url'], 'classes': ['']}),
     ]
+    actions = ["create_qrcode"]
+
+    def create_qrcode(self, request, queryset):
+        cmp_list = CompanyInfo.objects.all()
+        for cmp_info in cmp_list:
+            img_path = os.path.split(os.path.realpath(__file__))[0]+"/../media/prcode_image/"+cmp_info.company_name+".jpg"
+            qrcode.make("https://brilliantlife.com.cn:8020/media/qrcode/pages/index/index/"+str(cmp_info.id)).save(img_path)
+            cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
+            cmp_info.save()
+
+    create_qrcode.short_description = "更新二维码"
     list_per_page = 15
 
 # 用户管理
 @admin.register(UserInfo)
 class UserInfoAdmin(ImportExportModelAdmin):
+    tmp_storage_class = CacheStorage
+    resource_class = UserInfoResource
     list_display=['user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head','desc']
     search_fields =('user_name','weixin_openid','nick_name','gender','nation','policy_role','household','is_bd','job_status','id_card','phone_number','mig_worker','company_name','labour_union','join_union','pic_head','desc')
     fieldsets = [
@@ -55,6 +72,30 @@ class AwardInfoAdmin(ImportExportModelAdmin):
     ]
     list_per_page = 15 
 
+
+# 抽奖管理
+@admin.register(PrizeInfo)
+class PrizeInfoAdmin(ImportExportModelAdmin): 
+    list_display=['prize_name','prize_image','current_remind_num','prize_probability','can_get_prize']
+    search_fields =('prize_name','prize_image','current_remind_num','prize_probability','can_get_prize')
+    fieldsets = [
+       ('用户数据', {'fields': ['prize_name','prize_image','current_remind_num','prize_probability','can_get_prize'], 'classes': ['']}),
+    ]
+    list_per_page = 15 
+    
+
+
+# 中奖管理
+@admin.register(UserPrizeInfo)
+class UserPrizeInfoAdmin(ImportExportModelAdmin): 
+    list_display=['user_name','phone_number','labour_name','company_name','company_address','prize_name','revice_time','is_prized']
+    search_fields =('user_name','phone_number','labour_name','company_name','company_address','prize_name','revice_time','is_prized')
+    fieldsets = [
+       ('用户数据', {'fields': ['user_name','phone_number','labour_name','company_name','company_address','prize_name','revice_time','is_prized'], 'classes': ['']}),
+    ]
+    list_per_page = 15 
+
+    
 
 # 题库管理
 @admin.register(QuestionBank)
@@ -100,11 +141,11 @@ class ActionInfoAdmin(admin.ModelAdmin):
 
 # 领奖管理
 @admin.register(UserAward)
-class UserAwardAdmin(admin.ModelAdmin): 
-    list_display=['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name']
-    search_fields =('user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name')
+class UserAwardAdmin(ImportExportModelAdmin): 
+    list_display=['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name','revice_time',"award_image"]
+    search_fields =('user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name','revice_time',"award_image")
     fieldsets = [
-       ('用户数据', {'fields': ['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name'], 'classes': ['']}),
+       ('用户数据', {'fields': ['user_name','phone_number','labour_name','company_name','company_address','is_finished','award_name','revice_time',"award_image"], 'classes': ['']}),
     ]
     list_per_page = 15
 

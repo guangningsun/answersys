@@ -22,6 +22,12 @@ urlpatterns = [
     path('get_user_award_info/',views.get_user_award_info),
     path('submit_user_info/',views.submit_user_info),
     path('revice_award/',views.revice_award),
+    path('register_user/',views.register_user),
+    path('get_award_history/',views.get_award_history),
+    path('is_in_activity_time/',views.is_in_activity_time),
+    path('is_member/',views.is_member),
+    path('get_prize_info/',views.get_prize_info),
+    
     
     
 

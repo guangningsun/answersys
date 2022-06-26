@@ -60,7 +60,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'OPTIONS': {
+            'timeout': 30,
+        }
     }
+
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -130,12 +134,20 @@ SIMPLEUI_CONFIG = {
             'url': 'AppModel/examscore',
             'icon': 'fa fa-server'
         },{
-            'name': '奖品份数管理',
+            'name': '活动管理',
             'url': 'AppModel/actioninfo',
             'icon': 'fa fa-server'
         },{
             'name': '奖品领用',
             'url': 'AppModel/useraward',
+            'icon': 'fa fa-server'
+        },{
+            'name': '抽奖管理',
+            'url': 'AppModel/prizeinfo',
+            'icon': 'fa fa-server'
+        },{
+            'name': '中奖信息',
+            'url': 'AppModel/userprizeinfo',
             'icon': 'fa fa-server'
         }]
         },{

@@ -22,6 +22,7 @@ from AppModel.WXBizDataCrypt import WXBizDataCrypt
 from django.conf import settings
 import qrcode,os
 from django.core.exceptions import ObjectDoesNotExist
+import random
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
@@ -62,7 +63,8 @@ def create_qrcode(request):
                 # import pdb;pdb.set_trace()
                 cmp_info = CompanyInfo.objects.get(company_name=request.data["company_name"])
                 img_path = os.path.split(os.path.realpath(__file__))[0]+"/../media/prcode_image/"+cmp_info.company_name+".jpg"
-                qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
+                # qrcode.make("https://brilliantlife.com.cn:8888/admin/").save(img_path)
+                qrcode.make("https://brilliantlife.com.cn:8020/media/qrcode/pages/index/index/"+str(cmp_info.id)).save(img_path)
                 cmp_info.prcode_image = "prcode_image/"+cmp_info.company_name+".jpg"
                 cmp_info.save()
                 context = {'cmp_info':cmp_info} 
@@ -99,7 +101,7 @@ def weixin_sns(request,js_code):
             session_key = json.loads(req.content)['session_key']
             # WeixinSessionKey.objects.update_or_create(weixin_openid=openid,
             #                                         weixin_sessionkey=session_key)
-            is_login = "1"
+            is_login = "1" #成功 0登录失败，跳转到身份认证
             # user_auth = "0"
             try:
                 wsk = WeixinSessionKey.objects.get(weixin_openid=openid)
@@ -137,19 +139,24 @@ def weixin_gusi(request):
             pc = WXBizDataCrypt(appId, sessionKey)
             res_data = pc.decrypt(encryptedData, iv)
             phone_number = res_data["phoneNumber"]
+            res_data["is_exist"] = "0" #不存在
             # 增加创建用户动作 openid phonenumber nickname
             try:
                 # 用户登录时判断用户是否存在
+                # userinfo = UserInfo.objects.get(weixin_openid=openid)
                 userinfo = UserInfo.objects.get(weixin_openid=openid)
-                # res_data["auth"]= userinfo.auth
-            except UserInfo.DoesNotExist:
-                # 不存在则创建新用户
-                userinfo = UserInfo(weixin_openid=openid,
-                                    phone_number=phone_number)
-                                    # ,auth="0")
-                userinfo.save()
-                # res_data["auth"] = "0"
-            return HttpResponse(json.dumps(res_data),content_type='application/json')
+                res_data["is_exist"] = "1"
+                return HttpResponse(json.dumps(res_data),content_type='application/json')
+            except :
+                try:
+                    ui = UserInfo.objects.get(phone_number=phone_number)
+                    ui.weixin_openid=openid
+                    ui.save()
+                    res_data["is_exist"] = "1"
+                    return HttpResponse(json.dumps(res_data),content_type='application/json')
+                except:
+                    res_data["is_exist"] = "0"
+                    return HttpResponse(json.dumps(res_data),content_type='application/json')
         except:
             return HttpResponse(json.dumps("{\"error\":1}"),content_type='application/json')
 
@@ -205,10 +212,10 @@ def get_answer_result(request):
             ans_res ={}
             ans_res["score"]= eslist.score
             if eslist.score == 100:
-                ans_res["hint"]="恭喜您获得满分！您有机会获选择会员日普惠商品一件"
+                ans_res["hint"]="恭喜您获得满分！您获得1次抽奖机会"
             else:
                 ans_res["hint"]="继续努力"
-            ans_res["remain"] = ActionInfo.objects.all()[0].current_award_total
+            ans_res["remain"] = _compute_remind_award_num()
             res_json = {"error": 0,"msg": {
                         "answer_result": ans_res }}
             return Response(res_json)
@@ -222,9 +229,13 @@ def submit_paper(request):
         total_score=100
         right_num = len(json.loads(answer_list))
         wrong_num = 0
-        for a in json.loads(answer_list):
+        al = json.loads(answer_list)
+        for a in al:
             qb_info = QuestionBank.objects.get(id=a["pid"])
-            if qb_info.answer == a["answer"]:
+            tmp_qb = qb_info.answer
+            if len(qb_info.answer) == 1:
+                tmp_qb = qb_info.answer[0]
+            if tmp_qb == a["answer"]:
                 continue
             else:
                 total_score = total_score - qb_info.score
@@ -232,18 +243,25 @@ def submit_paper(request):
                 wrong_num = wrong_num +1
         if total_score<= 0:
             total_score=0
-        ui = UserInfo.objects.get(phone_number=user_phone_number)
-        es = ExamScore(user_name = ui.user_name,
-                        phone_number = user_phone_number,
-                        company_name = ui.company_name, 
-                        score =  total_score,
-                        right_num =  right_num,
-                        wrong_num =  wrong_num)
-        es.save()
-        res_json ={}
-        res_json["error"]=0
-        res_json["msg"]="提交成功"
-        return Response(res_json)
+        logger.info('user phone_number is: %s submit paper' % (user_phone_number))
+        try:
+            ui = UserInfo.objects.get(phone_number=user_phone_number)
+            es = ExamScore(user_name = ui.user_name,
+                            phone_number = user_phone_number,
+                            company_name = ui.company_name, 
+                            score =  total_score,
+                            right_num =  right_num,
+                            wrong_num =  wrong_num)
+            es.save()
+            res_json ={}
+            res_json["error"]=0
+            res_json["msg"]="提交成功"
+            return Response(res_json)
+        except:
+            res_json ={}
+            res_json["error"]=0
+            res_json["msg"]="未进行手机号认证，请点击手机号登录"
+            return Response(res_json)
                     
 
 # 获取试卷信息
@@ -285,18 +303,24 @@ def _get_questiondetail_by_id(pid):
         serializer = QuestionBankSerializer(qb_info_set,many=True)
         return serializer.data[0]
 
-
+# 获取排名
 @api_view(['GET'])
 def get_rankinfo(request):
     if request.method == 'GET':
         rank_info = ExamScore.objects.all().order_by('-score')
         res = []
         tmp_set = set()
+        i=0
         for obj in rank_info:
+            i= i+1
+            if i > 20:
+                break
             if obj.phone_number in tmp_set:
                 continue
             try:
-                user_info = UserInfo.objects.get(phone_number=obj.phone_number)
+                ul = UserInfo.objects.filter(phone_number=obj.phone_number)
+                if len(ul)>0:
+                    user_info = ul[0]
             except ObjectDoesNotExist as err:
                 logger.error('此员工不在员工列表中，ERR: %s' % err)
                 continue
@@ -312,9 +336,12 @@ def get_rankinfo(request):
                     "rankList": res }}
         return Response(res_json)
 
+
+#获取活动数量
 @api_view(['GET'])
 def get_award_num(request):
     if request.method == 'GET':
+        r_num = int(_compute_remind_award_num())
         award_info = ActionInfo.objects.filter(start_time__lte=datetime.datetime.now(),end_time__gte=datetime.datetime.now()).order_by('start_time')
         logger.info('award_info: %s' % award_info.count())
         if award_info.count() == 0:
@@ -327,7 +354,7 @@ def get_award_num(request):
         res_json = {
             "error":1,
             "msg": {
-                "award": obj.current_award_total
+                "award": r_num
             }
         }
         return Response(res_json)
@@ -344,6 +371,7 @@ def get_award_info(request):
         return Response(res_json)
 
 
+# 获取领奖信息
 @api_view(['POST'])
 def get_user_award_info(request):
     if request.method == 'POST':
@@ -352,9 +380,8 @@ def get_user_award_info(request):
         except KeyError as err:
             logger.error('参数错误.')
             return HttpResponseBadRequest()
-        try:
-            award = UserAward.objects.get(phone_number=phone_number)
-        except ObjectDoesNotExist as err:
+        awards = UserAward.objects.filter(phone_number=phone_number)
+        if awards.count() == 0:
             user_info = UserInfo.objects.get(phone_number=phone_number)
             company_info = CompanyInfo.objects.get(company_name=user_info.company_name)
             tmp = {}
@@ -365,7 +392,7 @@ def get_user_award_info(request):
             tmp['company_address'] = company_info.company_address
             res_json = {"error": 0,"msg": {"awardInfos": tmp }}
             return Response(res_json)
-
+        award = awards[0]
         tmp={}
         tmp['name'] = award.user_name
         tmp['tel'] = award.phone_number
@@ -376,37 +403,223 @@ def get_user_award_info(request):
         return Response(res_json)
 
 
+def _compute_remind_award_num():
+     # 计算活动一共多少天 total_num 
+    aio = ActionInfo.objects.get(action_name='安全月活动第一次')
+    total_num = int(aio.active_long)
+     # 获取活动每天可领取奖品数量 default_num =1800
+    default_num = int(aio.current_award_total)
+     # 计算是活动第几天   cd = current_day  - start_day +1
+    cd = datetime.date(datetime.datetime.now().year,datetime.datetime.now().month,datetime.datetime.now().day) - aio.start_time
+     # 活动剩余天数  remind_day = total_num -cd
+    rd = total_num - (cd.days+1)
+     # 获取活动共剩余奖品数量 remind_award_num
+    total_ra_num = int(aio.current_remind_num)
+     # 查看当天剩余奖品   remind_award_num = remind_award_num - 1800*remind_day
+    c_r_award_num = total_ra_num - default_num*rd
+    return c_r_award_num
+
+
 # 领取奖品接口
 @api_view(['POST'])
 def revice_award(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
         award_id = request.data["award_id"]
+        apart_id = request.data["apart_id"]
         try:
-            user_info = UserInfo.objects.get(phone_number=phone_number)
-            ua = UserAward(user_name=user_info.user_name,
-            company_address=user_info.company_name,
-            award_name=AwardInfo.objects.get(id=award_id).award_name,
-            labour_name=user_info.labour_union,
-            is_finished=True)
-            ua.save()   
-            res_json = {"error": 0,"msg":"已登记领奖"}
-            return Response(res_json)
+            if datetime.datetime.now().hour >=9:
+                user_info = UserInfo.objects.get(phone_number=phone_number)
+                #查看用户是否已经领奖
+                try:
+                    uif = UserAward.objects.get(phone_number=phone_number)
+                    # 如果有领取记录则回复 不能再领
+                    res_json = {"error": 0,"msg":"已领奖无法再次领取"}
+                    return Response(res_json)
+                    # 如果  
+                except:
+                    # 如果没有领取记录，且当天还有奖品可领
+                    if _compute_remind_award_num() > 0 :
+                        cpi = CompanyInfo.objects.get(id=apart_id)
+                        ua = UserAward(user_name=user_info.user_name,
+                            phone_number=phone_number,
+                        company_address=cpi.company_address,
+                        company_name=cpi.company_name,
+                        award_name=AwardInfo.objects.get(id=award_id).award_name,
+                        labour_name=user_info.labour_union,
+                        award_image=AwardInfo.objects.get(id=award_id).award_image,
+                        is_finished=True)
+                        ua.save()
+                        # 更新活动奖品数量
+                        ai = ActionInfo.objects.get(action_name='安全月活动第一次')
+                        ai.current_remind_num = str(int(ai.current_remind_num) -1)
+                        ai.save()
+                        res_json = {"error": 0,"msg":"已登记领奖"}
+                        return Response(res_json)
+                    else:
+                        res_json = {"error": 0,"msg":"恭喜您获得满分！活动火热，普惠商品已被领空，请明日在来"}
+                        return Response(res_json)
+            else:
+                res_json = {"error": 0,"msg":"上午9:00才能开抢哦！"}
+                return Response(res_json)
         except:
-            res_json = {"error": 0,"msg":"领奖失败请联系管理员"}
+            res_json = {"error": 0,"msg":"领取物品失败，请您扫描二维码参加活动或联系技术人员！"}
             return Response(res_json)
+
 
 #确认备注信息
 @api_view(['POST'])
 def submit_user_info(request):
     if request.method == 'POST':
         phone_number = request.data["phone_number"]
+        apart_id = request.data["apart_id"]
         try:
             user_info = UserInfo.objects.get(phone_number=phone_number)
             user_info.desc = request.data["remark"]
+            user_info.company_name = CompanyInfo.objects.get(id=apart_id).company_name
             user_info.save()
-            res_json = {"error": 0,"msg": "提交备注成功"}
+            res_json = {"error": 0,"msg": "提交备注成功","is_update": True}
             return Response(res_json)
         except:
             res_json = {"error": 0,"msg": "提交备注失败"}
             return Response(res_json)
+
+#更新身份信息
+@api_view(['POST'])
+def register_user(request):
+    if request.method == 'POST':
+        id_card = request.data["id_card"]
+        try:
+            user_info = UserInfo.objects.get(id_card=id_card)
+            user_info.phone_number = request.data["phone_number"]
+            user_info.weixin_openid = request.data["open_id"]
+            user_info.save()
+            res_json = {"error": 0,"msg": "更新信息成功"}
+            return Response(res_json)
+        except:
+            res_json = {"error": 0,"msg": "后台没有该用户请联系管理员"}
+            return Response(res_json)
+
+#更新身份信息
+@api_view(['POST'])
+def get_award_history(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        try:
+            userawardinfoset = UserAward.objects.filter(phone_number=phone_number)
+            serializer = UserAwardInfoSerializer(userawardinfoset, many=True)
+            res_json = {"error": 0,"msg": {
+                    "awardlist": serializer.data }}
+            return Response(res_json)
+        except:
+            res_json = {"error": 0,"msg": "没有该用户领奖信息"}
+            return Response(res_json)
+
+#获取是否在活动时间
+@api_view(['GET'])
+def is_in_activity_time(request):
+    if request.method == 'GET':
+        tpi = TestPaperInfo.objects.get(title='五一活动卷')
+        ct = datetime.datetime.now().utcnow()
+        st = tpi.starttime.replace(tzinfo=None)
+        et = tpi.endtime.replace(tzinfo=None)
+        if ct.__ge__(st) and ct.__le__(et):
+            res_json = {"error": 0,"msg": "活动开始","is_start": True}
+            return Response(res_json)
+        else:
+            res_json = {"error": 1,"msg": "活动尚未开始","is_start": False}
+            return Response(res_json)
+
+
+#是否是会员
+@api_view(['POST'])
+def is_member(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        try:
+            userinfolist = UserInfo.objects.filter(phone_number=phone_number)
+            can_get_prize = True
+            try:
+                upi = UserPrizeInfo.objects.filter(phone_number=phone_number)
+                if len(upi)>0:
+                    can_get_prize =False
+            except:
+                pass
+            if len(userinfolist) >0:
+                res_json = {"is_member": True,"msg": "success" ,'can_get_prize':can_get_prize}
+                return Response(res_json)
+            else:
+                res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员",'can_get_prize':can_get_prize}
+                return Response(res_json)
+        except:
+            res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员",'can_get_prize':can_get_prize}
+            return Response(res_json)
+
+
+#判断抽奖结果
+@api_view(['POST'])
+def get_prize_info(request):
+    if request.method == 'POST':
+        phone_number = request.data["phone_number"]
+        apart_id = request.data["apart_id"]
+        pi = PrizeInfo.objects.get(prize_name="百事可乐一包")
+        upl = UserPrizeInfo.objects.filter(phone_number=phone_number)
+        user_info = UserInfo.objects.get(phone_number=phone_number)
+        can_lottery = 1
+        if len(upl) > 0:
+            can_lottery = 0
+        try:
+            prize_list=[]
+            a ={"id":1,"desc":'中奖了'}
+            b ={"id":2,"desc":'谢谢'}
+            c ={"id":3,"desc":'中奖了'}
+            d ={"id":4,"desc":'谢谢'}
+            prize_list.append(a)
+            prize_list.append(b)
+            prize_list.append(c)
+            prize_list.append(d)
+            prize_info={"prize_list":prize_list}
+            if can_lottery == 1:
+                x = random.randint(0,100)
+                name = pi.prize_name
+                id = 1
+                is_prized = True
+                if x> int(float(pi.prize_probability)*100) or int(pi.current_remind_num) <=0:
+                    name = "谢谢,未中奖"
+                    id = -1
+                    is_prized = False
+                prize_result = {"id":id,"name":name,"img": pi.prize_image.name}
+                prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':can_lottery}
+                # 登记中奖信息
+                if int(pi.current_remind_num) > 0 :
+                    cpi = CompanyInfo.objects.get(id=apart_id)
+                    ua = UserPrizeInfo(user_name=user_info.user_name,
+                        phone_number=phone_number,
+                    company_address=cpi.company_address,
+                    company_name=cpi.company_name,
+                    prize_name=pi.prize_name,
+                    labour_name=user_info.labour_union,
+                    is_prized=is_prized)
+                    ua.save()
+                    # 更新活动奖品数量
+                    pi.current_remind_num = str(int(pi.current_remind_num) -1)
+                    pi.save()
+                else:
+                    cpi = CompanyInfo.objects.get(id=apart_id)
+                    ua = UserPrizeInfo(user_name=user_info.user_name,
+                        phone_number=phone_number,
+                    company_address=cpi.company_address,
+                    company_name=cpi.company_name,
+                    prize_name=pi.prize_name,
+                    labour_name=user_info.labour_union,
+                    is_prized=is_prized)
+                    ua.save()
+                return Response({"prize_info":prize_info})
+            else:
+                prize_result = {"id":1,"name":pi.prize_name,"img": pi.prize_image.name}
+                prize_info={"prize_list":prize_list,'prize_result':prize_result,'can_lottery':can_lottery}
+
+        except:
+            res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
+            return Response(res_json)
+

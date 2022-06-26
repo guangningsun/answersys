@@ -8,6 +8,7 @@ from django.utils.html import format_html
 from AppModel import *
 from multiselectfield import MultiSelectField
 
+
 class CompanyInfo(models.Model):
     company_name = models.CharField(max_length=200,verbose_name='公司名字')
     company_address = models.CharField(max_length=200,verbose_name='公司地址')
@@ -37,15 +38,15 @@ class UserInfo(models.Model):
     ]
     policy_roles = [
         ("0","党员"),
-        ("1","群员"),
+        ("1","团员"),
         ("2","群众"),
     ]
     user_name = models.CharField(max_length=200,verbose_name='用户名')
     nick_name = models.CharField(max_length=200,verbose_name='微信名')
-    gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice)
-    nation = models.CharField(max_length=200,verbose_name='民族', choices=nations)
-    policy_role = models.CharField(max_length=20,verbose_name='政治面貌', choices=policy_roles)
-    household = models.CharField(max_length=200,verbose_name='户籍类型')
+    gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice,default=1)
+    nation = models.CharField(max_length=200,verbose_name='民族', choices=nations,default=0)
+    policy_role = models.CharField(max_length=20,verbose_name='政治面貌', choices=policy_roles,default=2)
+    household = models.CharField(max_length=200,verbose_name='户籍类型',default="非农业")
     is_bd = models.BooleanField(verbose_name='是否八大群体',default="True")
     job_status = models.BooleanField(verbose_name='就业状态',default="True")
     id_card = models.CharField(max_length=200,verbose_name='身份证号')
@@ -53,11 +54,12 @@ class UserInfo(models.Model):
     mig_worker = models.BooleanField(verbose_name='是否农民工',default="True")
     company_name = models.CharField(max_length=200,verbose_name='单位名称')
     labour_union = models.CharField(max_length=200,verbose_name='所属工会')
-    join_union = models.DateField(verbose_name='入会时间')
+    join_union = models.DateField(verbose_name='入会时间',default=datetime.date.today)
     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
     pic_head = models.ImageField(u'头像',null=True, blank=True, upload_to='head_image')
-    desc = models.CharField(max_length=200,verbose_name='备注')
-
+    desc = models.CharField(max_length=200,verbose_name='备注',default='-')
+    
+    
     
     class Meta:
         verbose_name = '用户信息'
@@ -121,17 +123,13 @@ class AwardInfo(models.Model):
     def __str__(self):
         return self.award_name
 
-# class award_chooseinfo
-#     award_name
-#     datetime（天为时间）
-#     choose_num
 
 class ActionInfo(models.Model):
     action_name = models.CharField(max_length=200,verbose_name='活动名称')
     start_time = models.DateField(verbose_name='活动开始时间')
     end_time = models.DateField(verbose_name='活动结束时间')
     active_long = models.CharField(max_length=200,verbose_name='活动时长')
-    current_award_total = models.CharField(max_length=200,verbose_name='每天可领取奖品份数',default='2000')
+    current_award_total = models.CharField(max_length=200,verbose_name='每天可领取奖品份数',default='1800')
     award_total_num = models.CharField(max_length=200,verbose_name='奖品总数')
     current_remind_num = models.CharField(max_length=200,verbose_name='奖品剩余总量')
     
@@ -150,6 +148,8 @@ class UserAward(models.Model):
     company_address = models.CharField(max_length=200,verbose_name='单位地址')
     is_finished= models.BooleanField(verbose_name='是否已领奖品',default="False") 
     award_name = models.CharField(max_length=200,verbose_name='奖品信息')
+    revice_time = models.DateField(verbose_name='领奖时间',default=datetime.date.today)
+    award_image = models.ImageField(u'奖品图片',null=True, blank=True, upload_to='award_image')
     
     class Meta:
         verbose_name = '领奖信息'
@@ -168,24 +168,33 @@ class WeixinSessionKey(models.Model):
         verbose_name = '微信用户SK'
         verbose_name_plural = '微信用户SK'
 
-# class UserInfo(models.Model):
-#     AUTH_CHOICES = [
-#     ('0', '员工'),
-#     ('1', '主管'),
-#     ('2', '主任'),
-#     ('3', '管理员'),
-#     ]
-#     nick_name = models.CharField(max_length=200,verbose_name='微信名')
-#     user_name = models.CharField(max_length=200,verbose_name='用户名')
-#     weixin_openid = models.CharField(max_length=200,verbose_name='微信ID')
-#     phone_number = models.CharField(max_length=200,verbose_name='手机号')
-#     auth = models.CharField(max_length=200, choices=AUTH_CHOICES,verbose_name='用户权限')
-#     address = models.CharField(max_length=200,verbose_name='常用地址')
+# 抽奖设定信息
+class PrizeInfo(models.Model):
+    prize_name = models.CharField(max_length=200,verbose_name='奖品名字')
+    prize_image = models.ImageField(u'奖品图片',null=True, blank=True, upload_to='prize_image')
+    action_long = models.CharField(max_length=200,verbose_name='活动时长',default='2')
+    current_award_total = models.CharField(max_length=200,verbose_name='每天奖品份数',default='2000')
+    award_total_num = models.CharField(max_length=200,verbose_name='奖品总数')
+    current_remind_num = models.CharField(max_length=200,verbose_name='奖品剩余总量')
+    prize_probability = models.CharField(max_length=200,verbose_name='中奖概率')
+    can_get_prize = models.BooleanField(verbose_name='抽奖后是否可答题',default="False")
 
-#     class Meta:
-#         verbose_name = '用户信息'
-#         verbose_name_plural = '用户信息'
+    class Meta:
+        verbose_name = '抽奖信息'
+        verbose_name_plural = '抽奖信息'
     
-#     def __str__(self):
-#         return self.user_name
+    def __str__(self):
+        return self.prize_name
+
+# 中奖信息
+class UserPrizeInfo(models.Model):
+    user_name = models.CharField(max_length=200,verbose_name='用户名')
+    phone_number = models.CharField(max_length=200,verbose_name='手机号码')
+    labour_name = models.CharField(max_length=200,verbose_name='工会名称')
+    company_name = models.CharField(max_length=200,verbose_name='所答考卷单位')
+    company_address = models.CharField(max_length=200,verbose_name='单位地址')
+    prize_name = models.CharField(max_length=200,verbose_name='奖品信息')
+    revice_time = models.DateField(verbose_name='领奖时间',default=datetime.date.today)
+    is_prized = models.BooleanField(verbose_name='是否中奖',default="False") 
+
 
