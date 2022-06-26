@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _rank = _interopRequireDefault(__webpack_require__(/*! ./pages/rank/rank.vue */ 183));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_rank.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -96,7 +96,7 @@ var components
 try {
   components = {
     uNavbar: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 213))
+      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 231))
     }
   }
 } catch (e) {
@@ -153,7 +153,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
 //
 //
 //
@@ -243,6 +243,9 @@ var _default =
 
   },
   onLoad: function onLoad() {
+    uni.showLoading({
+      title: '查询中...' });
+
     this.requestWithMethod(
     getApp().globalData.get_rankinfo,
     'GET',
@@ -260,6 +263,7 @@ var _default =
     successCb: function successCb(rsp) {
       console.log('get_rankinfo success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         this.rankList = rsp.data.msg.rankList;
       }
@@ -267,8 +271,10 @@ var _default =
     },
     failPhoneCb: function failPhoneCb(err) {
       console.log('get_rankinfo failed', err);
+      uni.hideLoading();
     },
     completePhoneCb: function completePhoneCb(rsp) {} } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

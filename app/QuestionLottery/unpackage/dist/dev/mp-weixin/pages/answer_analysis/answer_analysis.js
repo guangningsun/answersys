@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _answer_analysis = _interopRequireDefault(__webpack_require__(/*! ./pages/answer_analysis/answer_analysis.vue */ 171));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_answer_analysis.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -94,19 +94,19 @@ var components
 try {
   components = {
     uNavbar: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 213))
+      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 231))
     },
     uTag: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-tag/u-tag */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-tag/u-tag")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-tag/u-tag.vue */ 256))
+      return Promise.all(/*! import() | uview-ui/components/u-tag/u-tag */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-tag/u-tag")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-tag/u-tag.vue */ 274))
     },
     uRadioGroup: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-radio-group/u-radio-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio-group/u-radio-group")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio-group/u-radio-group.vue */ 280))
+      return Promise.all(/*! import() | uview-ui/components/u-radio-group/u-radio-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio-group/u-radio-group")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio-group/u-radio-group.vue */ 304))
     },
     uRadio: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-radio/u-radio */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio/u-radio")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio/u-radio.vue */ 288))
+      return Promise.all(/*! import() | uview-ui/components/u-radio/u-radio */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio/u-radio")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio/u-radio.vue */ 312))
     },
     uLine: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-line/u-line */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-line/u-line")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-line/u-line.vue */ 296))
+      return Promise.all(/*! import() | uview-ui/components/u-line/u-line */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-line/u-line")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-line/u-line.vue */ 320))
     }
   }
 } catch (e) {

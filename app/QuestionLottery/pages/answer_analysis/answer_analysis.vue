@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#6141ea" 
+			bgColor="#5de992" 
 			title="答题分析" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -21,7 +21,7 @@
 					<u-radio-group
 						v-model="radiovalue5" 
 						placement="column"
-						activeColor="#6141ea"
+						activeColor="#5de992"
 					>
 						<u-radio
 							:customStyle="{marginBottom: '8px'}"
@@ -49,7 +49,7 @@
 					<u-radio-group
 						v-model="radiovalue5" 
 						placement="column"
-						activeColor="#6141ea"
+						activeColor="#5de992"
 					>
 						<u-radio
 							:customStyle="{marginBottom: '8px'}"

@@ -11,10 +11,10 @@
 
 
 
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _App = _interopRequireDefault(__webpack_require__(/*! ./App */ 6));
 
-var _uviewUi = _interopRequireDefault(__webpack_require__(/*! uview-ui */ 12));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;_vue.default.use(_uviewUi.default);var cuCustom = function cuCustom() {__webpack_require__.e(/*! require.ensure | colorui/components/cu-custom */ "colorui/components/cu-custom").then((function () {return resolve(__webpack_require__(/*! ./colorui/components/cu-custom.vue */ 208));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};
+var _uviewUi = _interopRequireDefault(__webpack_require__(/*! uview-ui */ 12));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;_vue.default.use(_uviewUi.default);var cuCustom = function cuCustom() {__webpack_require__.e(/*! require.ensure | colorui/components/cu-custom */ "colorui/components/cu-custom").then((function () {return resolve(__webpack_require__(/*! ./colorui/components/cu-custom.vue */ 226));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};
 
 _vue.default.component('cu-custom', cuCustom);
 
@@ -37,6 +37,8 @@ _vue.default.prototype.request = function (api, params, successCallback, failedC
 
     data: params,
     success: function success(res) {
+      console.log('mmma111kk');
+      console.log(res.statusCode);
       // console.log('api:' + api + ' request success.');
       //确保successCallback是一个函数   
       if (typeof successCallback === "function") {
@@ -59,7 +61,7 @@ _vue.default.prototype.request = function (api, params, successCallback, failedC
 
 };
 
-_vue.default.prototype.requestWithMethod = function (api, method, params, successCallback, failedCallback, completeCallback) {
+_vue.default.prototype.requestWithMethod = function (api, method, params, successCallback, failedCallback, completeCallback) {var showDialog = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : true;
   uni.request({
     url: getApp().globalData.domain_port + api,
     method: method,
@@ -69,15 +71,34 @@ _vue.default.prototype.requestWithMethod = function (api, method, params, succes
 
     data: params,
     success: function success(res) {
-      // console.log('api:' + api + ' request success.');
-      //确保successCallback是一个函数
-      if (typeof successCallback === "function") {
-        //调用它，既然我们已经确定了它是可调用的
-        successCallback(res);
+      console.log('mak statusCode' + res.statusCode);
+      if (res.statusCode !== 200 && showDialog) {
+        uni.hideLoading();
+        uni.showModal({
+          title: '提示',
+          content: '活动火爆，服务器拥堵中，请您稍后再试。技术支持电话：15022746250',
+          cancelText: '再等等吧' });
+
+      } else {
+        // console.log('api:' + api + ' request success.');
+        //确保successCallback是一个函数
+        if (typeof successCallback === "function") {
+          //调用它，既然我们已经确定了它是可调用的
+          successCallback(res);
+        }
       }
+
     },
     fail: function fail(err) {
       console.log('api:' + api + ' request failed:', err);
+      if (showDialog) {
+        uni.showModal({
+          title: '提示',
+          content: '活动火爆，服务器拥堵中，请您稍后再试。技术支持电话：15022746250',
+          cancelText: '再等等吧' });
+
+      }
+
       if (typeof failedCallback === "function") {
         failedCallback(err);
       }
@@ -226,7 +247,14 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
     get_user_award_info: 'get_user_award_info/',
     submit_user_info: 'submit_user_info/',
     get_award_info: 'get_award_info/',
-    revice_award: 'revice_award/',
+    revice_award: 'revice_award/', //领取奖品，点击领取按钮触发
+    register_user: 'register_user/',
+    get_award_history: 'get_award_history/',
+    award_user_info_confirm: 'award_user_info_confirm/', // 领取奖品前信息确认
+    is_in_activity_time: 'is_in_activity_time/',
+    is_member: 'is_member/',
+    get_prize_info: 'get_prize_info/',
+    get_rule_info: 'get_rule_info/',
 
 
     // key 值
@@ -235,7 +263,10 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
     key_wx_openid: 'key_wx_openid',
     key_user_head: 'key_user_head',
     key_user_nickname: 'key_user_nickname',
-    key_phone_num: 'key_phone_num' },
+    key_phone_num: 'key_phone_num',
+    key_is_update: 'key_is_update',
+    key_apart: 'key_apart',
+    key_can_get_prize: 'key_can_get_prize' },
 
 
   onLaunch: function onLaunch() {

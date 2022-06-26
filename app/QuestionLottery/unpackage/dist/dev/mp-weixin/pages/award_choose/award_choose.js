@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _award_choose = _interopRequireDefault(__webpack_require__(/*! ./pages/award_choose/award_choose.vue */ 203));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_award_choose.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -94,13 +94,13 @@ var components
 try {
   components = {
     uNavbar: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 213))
+      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 231))
     },
     uButton: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 246))
+      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 264))
     },
     uToast: function() {
-      return __webpack_require__.e(/*! import() | uview-ui/components/u-toast/u-toast */ "uview-ui/components/u-toast/u-toast").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-toast/u-toast.vue */ 390))
+      return __webpack_require__.e(/*! import() | uview-ui/components/u-toast/u-toast */ "uview-ui/components/u-toast/u-toast").then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-toast/u-toast.vue */ 356))
     }
   }
 } catch (e) {
@@ -202,15 +202,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 var _default =
 {
   data: function data() {
     return {
+      domain: getApp().globalData.domain,
       awardInfoList: [] };
 
   },
   onLoad: function onLoad() {
+    uni.showLoading({
+      title: '查询中...',
+      mask: true });
 
     var params = {
       phone_number: uni.getStorageSync('key_phone_num') };
@@ -239,10 +242,15 @@ var _default =
     },
     onClickReceive: function onClickReceive(id) {
       console.log(id);
+      uni.showLoading({
+        title: '领取中...',
+        mask: true });
+
 
       var params = {
         phone_number: uni.getStorageSync('key_phone_num'),
-        award_id: id };
+        award_id: id,
+        apart_id: uni.getStorageSync('key_apart') };
 
 
       this.requestWithMethod(
@@ -259,26 +267,32 @@ var _default =
     successReviceAwardCb: function successReviceAwardCb(rsp) {
       console.log('revice_award success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         var par = {
-          type: 'success',
-          message: '恭喜你！' + rsp.data.msg,
+          message: rsp.data.msg,
           url: '../index/index' };
 
         this.showToast(par);
-        // uni.showToast({
-        // 	title: rsp.data.msg,
-        // 	icon: 'success',
-        // 	duration:3000,
-        // 	complete: () => {
-        // 		uni.navigateTo({
-        // 			url:'../index/index'
-        // 		})
-        // 	}
-        // })
       }
+      // if(rsp.data.error === 0 &&(rsp.data.msg.indexOf("已登记") != -1 || rsp.data.msg.indexOf("成功") != -1) ){
+      // 	let par = {
+      // 		type: 'success',
+      // 		message: rsp.data.msg,
+      // 		url: '../index/index'
+      // 	}
+      // 	this.showToast(par)
+      // } else if(rsp.data.error === 0 && rsp.data.msg.indexOf("失败") != -1){
+      // 	let par = {
+      // 		type: 'fail',
+      // 		message: rsp.data.msg,
+      // 	}
+      // 	this.showToast(par)
+      // }
+
     },
     failReviceAwardCb: function failReviceAwardCb(err) {
+      uni.hideLoading();
       console.log('revice_award failed', err);
     },
     completeReviceAwardCb: function completeReviceAwardCb(rsp) {},
@@ -287,11 +301,13 @@ var _default =
     successCb: function successCb(rsp) {
       console.log('get_award_info success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         this.awardInfoList = rsp.data.msg.awardlist;
       }
     },
     failCb: function failCb(err) {
+      uni.hideLoading();
       console.log('get_award_info failed', err);
     },
     completeCb: function completeCb(rsp) {} } };exports.default = _default;

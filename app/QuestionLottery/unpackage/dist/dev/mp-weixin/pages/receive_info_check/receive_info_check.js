@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _receive_info_check = _interopRequireDefault(__webpack_require__(/*! ./pages/receive_info_check/receive_info_check.vue */ 197));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_receive_info_check.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -94,22 +94,22 @@ var components
 try {
   components = {
     uNavbar: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 213))
+      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 231))
     },
     "u-Form": function() {
-      return Promise.all(/*! import() | uview-ui/components/u--form/u--form */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--form/u--form")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--form/u--form.vue */ 304))
+      return Promise.all(/*! import() | uview-ui/components/u--form/u--form */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--form/u--form")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--form/u--form.vue */ 336))
     },
     uFormItem: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-form-item/u-form-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-form-item/u-form-item")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-form-item/u-form-item.vue */ 310))
+      return Promise.all(/*! import() | uview-ui/components/u-form-item/u-form-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-form-item/u-form-item")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-form-item/u-form-item.vue */ 342))
     },
-    "u-Input": function() {
-      return Promise.all(/*! import() | uview-ui/components/u--input/u--input */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--input/u--input")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--input/u--input.vue */ 318))
+    "u-Text": function() {
+      return Promise.all(/*! import() | uview-ui/components/u--text/u--text */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--text/u--text")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--text/u--text.vue */ 282))
     },
     "u-Textarea": function() {
-      return Promise.all(/*! import() | uview-ui/components/u--textarea/u--textarea */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--textarea/u--textarea")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--textarea/u--textarea.vue */ 323))
+      return Promise.all(/*! import() | uview-ui/components/u--textarea/u--textarea */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--textarea/u--textarea")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--textarea/u--textarea.vue */ 350))
     },
     uButton: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 246))
+      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 264))
     }
   }
 } catch (e) {
@@ -253,20 +253,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 var _default =
 {
   data: function data() {
     return {
-      userInfo: {},
+      userInfo: {
+        name: '--',
+        tel: '--',
+        company: '--',
+        company_address: '--' },
+
       phoneNum: uni.getStorageSync('key_phone_num'),
       remark: '' };
 
   },
   onLoad: function onLoad() {
+
+    uni.showLoading({
+      title: '查询中...',
+      mask: true });
+
 
     var params = {
       phone_number: uni.getStorageSync('key_phone_num') };
@@ -285,39 +291,44 @@ var _default =
     successCb: function successCb(rsp) {
       console.log('get_user_award_info success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         this.userInfo = rsp.data.msg.awardInfos;
       }
     },
     failCb: function failCb(err) {
       console.log('get_user_award_info failed', err);
+      uni.hideLoading();
     },
     completeCb: function completeCb(rsp) {},
 
 
     onConfirm: function onConfirm() {
-      if (getApp().isEmpty(this.remark)) {
-        uni.navigateTo({
-          url: '../award_choose/award_choose' });
 
-      } else {
-        var params = {
-          phone_number: uni.getStorageSync('key_phone_num') };
+      uni.showLoading({
+        title: '查询中...',
+        mask: true });
+
+      var params = {
+        phone_number: uni.getStorageSync('key_phone_num'),
+        remark: this.remark,
+        apart_id: uni.getStorageSync('key_apart') };
 
 
-        this.requestWithMethod(
-        getApp().globalData.submit_user_info,
-        'POST',
-        params,
-        this.successConfirmCb,
-        this.failConfirmCb,
-        this.completeConfirmCb);
+      this.requestWithMethod(
+      getApp().globalData.submit_user_info,
+      'POST',
+      params,
+      this.successConfirmCb,
+      this.failConfirmCb,
+      this.completeConfirmCb);
 
-      }
+
     },
     successConfirmCb: function successConfirmCb(rsp) {
       console.log('submit_user_info success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         uni.navigateTo({
           url: '../award_choose/award_choose' });
@@ -325,6 +336,7 @@ var _default =
       }
     },
     failConfirmCb: function failConfirmCb(err) {
+      uni.hideLoading();
       console.log('submit_user_info failed', err);
     },
     completeConfirmCb: function completeConfirmCb(rsp) {} } };exports.default = _default;

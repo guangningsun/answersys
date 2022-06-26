@@ -101,6 +101,42 @@
             }
             
         }
+        ,{
+            "path" : "pages/login/register",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        // ,{
+        //     "path" : "pages/warmup/warmup",
+        //     "style" :                                                                                    
+        //     {
+        //         "navigationBarTitleText": "",
+        //         "enablePullDownRefresh": false
+        //     }
+        // }
+        ,{
+            "path" : "pages/toohot/toohot",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/lottery/lottery",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"backgroundColor": "#fff"
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"mp-alipay": {
@@ -108,7 +144,7 @@
 			"transparentTitle": "always",
 			"allowsBounceVertical": "NO"
 		},
-		"navigationBarBackgroundColor": "#6141ea",
+		"navigationBarBackgroundColor": "#5de992",
 		"navigationBarTitleText": "智慧群团",
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "white",

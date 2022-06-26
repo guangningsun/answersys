@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#6141ea" 
+			bgColor="#5de992" 
 			title="答题" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -14,7 +14,8 @@
 		<view class="u-demo-block" v-for="(item, index) in questionListShow" :key="index"  style="margin-top: 30upx; margin-bottom: 30upx; padding: 15upx; border-radius: 12upx; background-color: #FFFFFF;">
 			<view class="flex" style="margin-top: 5upx; margin-bottom: 5upx;">
 				<u-tag :text="item.type === '多选'? '多选题' :'单选题'" :type="item.type === '多选'? 'warning' : 'success'" plain plainFill style="width: 60upx;"></u-tag>
-				<text class="title text-bold text-lg text-black"></text>
+				<text class="title text-bold text-lg text-black" style="margin-left: 30upx;"></text>
+				<u--text type="info" :text="'第'+(item.id)+'题，共'+questionList.length+'题'" style="margin-left: 10upx;"></u--text>
 			</view>
 			<text class="title text-bold text-lg text-black">{{item.id}}. {{item.title}}</text>
 			<view class="u-demo-block__content" style="margin-top: 20upx;">
@@ -23,15 +24,18 @@
 						v-model="answerRadioValue[item.id-1]"
 						placement="column"
 						@change="checkboxChange"
-						activeColor="#6141ea"
+						:borderBottom="true"
+						activeColor="#5de992"
+						iconPlacement="right"
 					>
 						<u-checkbox
-							:customStyle="{marginBottom: '16px'}"
+							:customStyle="{ paddingBottom: '10px', paddingTop: '10px', paddingRight: '15px', paddingLeft:'15px'}"
 							v-for="(questionItem, index2) in item.chooseItems"
 							:key="index2"
-							:label="questionItem.item_index + '. ' + questionItem.item_content"
+							labelSize='18px'
+							:label="questionItem.item_content"
 							:name="questionItem.item_index"
-						>
+						> 
 						</u-checkbox>
 					</u-checkbox-group>
 				</view>
@@ -40,13 +44,16 @@
 					<u-radio-group
 						v-model="answerRadioValue[item.id-1]"
 						placement="column"
-						activeColor="#6141ea"
+						:borderBottom="true"
+						activeColor="#5de992"
+						iconPlacement="right"
 					>
 						<u-radio
-							:customStyle="{marginBottom: '16px'}"
+							:customStyle="{paddingBottom: '10px', paddingTop: '10px', paddingRight: '15px', paddingLeft:'15px'}"
 							v-for="(questionItem, index3) in item.chooseItems"
 							:key="index3"
-							:label="questionItem.item_index + '. ' + questionItem.item_content"
+							labelSize='18px'
+							:label="questionItem.item_content"
 							:name="questionItem.item_index"
 						>
 						</u-radio>
@@ -59,7 +66,7 @@
 			v-if="questionListShow[0].id === questionList.length"
 		    text="提交"
 		    size="normal"
-			color="#6141ea"
+			color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
 			style="margin-top: 50px;"
 			@click="onSubmit"
 		></u-button>
@@ -68,7 +75,7 @@
 			v-if="questionListShow[0].id < questionList.length"
 		    text="下一题"
 		    size="normal"
-			color="#6141ea"
+			color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
 			style="margin-top: 50px;"
 			:disabled="answerRadioValue[questionListShow[0].id-1] === undefined || answerRadioValue[questionListShow[0].id-1] === '' "
 			@click="onNext"
@@ -94,6 +101,10 @@
 			}
 		},
 		onLoad() {
+			uni.showLoading({
+				title:'正在加载...',
+				mask:true
+			})
 			this.requestWithMethod(
 				getApp().globalData.get_testpaperinfo,
 				'GET',
@@ -107,6 +118,7 @@
 			successCb(rsp) {
 				console.log('get_testpaperinfo success, rsp======');
 				console.log(rsp);
+				uni.hideLoading()
 				if(rsp.data.error === 0){
 					this.questionList = rsp.data.msg.questionList
 					this.questionListShow.length= 0
@@ -117,6 +129,7 @@
 				
 			},
 			failCb(err) {
+				uni.hideLoading()
 				console.log('get_testpaperinfo failed', err);
 			},
 			completeCb(rsp) {},
@@ -128,8 +141,9 @@
 				console.log(rsp);
 				uni.hideLoading()
 				if(rsp.data.error === 0){
+					console.log('nnnn')
 					uni.navigateTo({
-						url: '/pages/answer_finish/answer_finish'
+						url: '../answer_finish/answer_finish'
 					})
 				}
 				
@@ -153,7 +167,8 @@
 				console.log(this.answerRadioValue)
 				
 				uni.showLoading({
-					title: '正在提交,请稍候....'
+					title: '正在提交....',
+					mask:true
 				});
 				
 				if(this.answerWithPid.length < this.questionList.length){

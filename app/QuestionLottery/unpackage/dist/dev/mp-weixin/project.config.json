@@ -1,13 +1,40 @@
 {
-  "description": "项目配置文件。",
+  "description": "项目配置文件，详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
   "packOptions": {
-    "ignore": []
+    "ignore": [],
+    "include": []
   },
   "setting": {
-    "urlCheck": false
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": true,
+    "coverView": true,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "uglifyFileName": false,
+    "checkInvalidKey": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": true,
+    "lazyloadPlaceholderEnable": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "disableUseStrict": false,
+    "showES6CompileOption": false,
+    "useCompilerPlugins": false,
+    "ignoreUploadUnusedFiles": true,
+    "useStaticServer": true
   },
   "compileType": "miniprogram",
-  "libVersion": "",
+  "libVersion": "2.21.1",
   "appid": "wx181045b78530d9a6",
   "projectname": "泰达普惠",
   "condition": {
@@ -24,21 +51,19 @@
       "list": []
     },
     "miniprogram": {
-      "current": 1,
+      "current": 0,
       "list": [
         {
           "name": "",
           "path": "",
           "query": "",
           "id": 0
-        },
-        {
-          "id": 1,
-          "name": "pages/award_choose/award_choose",
-          "pathName": "pages/award_choose/award_choose",
-          "query": ""
         }
       ]
     }
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
   }
 }

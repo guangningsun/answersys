@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _answering = _interopRequireDefault(__webpack_require__(/*! ./pages/answering/answering.vue */ 159));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_answering.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -94,25 +94,28 @@ var components
 try {
   components = {
     uNavbar: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 213))
+      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 231))
     },
     uTag: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-tag/u-tag */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-tag/u-tag")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-tag/u-tag.vue */ 256))
+      return Promise.all(/*! import() | uview-ui/components/u-tag/u-tag */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-tag/u-tag")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-tag/u-tag.vue */ 274))
+    },
+    "u-Text": function() {
+      return Promise.all(/*! import() | uview-ui/components/u--text/u--text */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u--text/u--text")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u--text/u--text.vue */ 282))
     },
     uCheckboxGroup: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-checkbox-group/u-checkbox-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-checkbox-group/u-checkbox-group")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-checkbox-group/u-checkbox-group.vue */ 264))
+      return Promise.all(/*! import() | uview-ui/components/u-checkbox-group/u-checkbox-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-checkbox-group/u-checkbox-group")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-checkbox-group/u-checkbox-group.vue */ 288))
     },
     uCheckbox: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-checkbox/u-checkbox */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-checkbox/u-checkbox")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-checkbox/u-checkbox.vue */ 272))
+      return Promise.all(/*! import() | uview-ui/components/u-checkbox/u-checkbox */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-checkbox/u-checkbox")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-checkbox/u-checkbox.vue */ 296))
     },
     uRadioGroup: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-radio-group/u-radio-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio-group/u-radio-group")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio-group/u-radio-group.vue */ 280))
+      return Promise.all(/*! import() | uview-ui/components/u-radio-group/u-radio-group */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio-group/u-radio-group")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio-group/u-radio-group.vue */ 304))
     },
     uRadio: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-radio/u-radio */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio/u-radio")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio/u-radio.vue */ 288))
+      return Promise.all(/*! import() | uview-ui/components/u-radio/u-radio */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-radio/u-radio")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-radio/u-radio.vue */ 312))
     },
     uButton: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 246))
+      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 264))
     }
   }
 } catch (e) {
@@ -248,6 +251,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -265,6 +275,10 @@ var _default =
 
   },
   onLoad: function onLoad() {
+    uni.showLoading({
+      title: '正在加载...',
+      mask: true });
+
     this.requestWithMethod(
     getApp().globalData.get_testpaperinfo,
     'GET',
@@ -278,6 +292,7 @@ var _default =
     successCb: function successCb(rsp) {
       console.log('get_testpaperinfo success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         this.questionList = rsp.data.msg.questionList;
         this.questionListShow.length = 0;
@@ -288,6 +303,7 @@ var _default =
 
     },
     failCb: function failCb(err) {
+      uni.hideLoading();
       console.log('get_testpaperinfo failed', err);
     },
     completeCb: function completeCb(rsp) {},
@@ -299,8 +315,9 @@ var _default =
       console.log(rsp);
       uni.hideLoading();
       if (rsp.data.error === 0) {
+        console.log('nnnn');
         uni.navigateTo({
-          url: '/pages/answer_finish/answer_finish' });
+          url: '../answer_finish/answer_finish' });
 
       }
 
@@ -324,7 +341,8 @@ var _default =
       console.log(this.answerRadioValue);
 
       uni.showLoading({
-        title: '正在提交,请稍候....' });
+        title: '正在提交....',
+        mask: true });
 
 
       if (this.answerWithPid.length < this.questionList.length) {

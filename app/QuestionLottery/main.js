@@ -28,6 +28,8 @@ Vue.prototype.request = function(api, params, successCallback, failedCallback, c
 		},
 		data: params,
 		success: res => {
+			console.log('mmma111kk')
+			console.log(res.statusCode)
 			// console.log('api:' + api + ' request success.');
 			//确保successCallback是一个函数   
 			if (typeof successCallback === "function") {
@@ -50,7 +52,7 @@ Vue.prototype.request = function(api, params, successCallback, failedCallback, c
 	});
 }
 
-Vue.prototype.requestWithMethod = function(api, method, params, successCallback, failedCallback, completeCallback) {
+Vue.prototype.requestWithMethod = function(api, method, params, successCallback, failedCallback, completeCallback, showDialog=true) {
 	uni.request({
 		url: getApp().globalData.domain_port + api,
 		method: method,
@@ -60,15 +62,34 @@ Vue.prototype.requestWithMethod = function(api, method, params, successCallback,
 		},
 		data: params,
 		success: res => {
-			// console.log('api:' + api + ' request success.');
-			//确保successCallback是一个函数
-			if (typeof successCallback === "function") {
-				//调用它，既然我们已经确定了它是可调用的
-				successCallback(res);
+			console.log('mak statusCode' + res.statusCode)
+			if(res.statusCode !== 200 && showDialog){
+				uni.hideLoading();
+				uni.showModal({
+					title: '提示',
+					content: '活动火爆，服务器拥堵中，请您稍后再试。技术支持电话：15022746250',
+					cancelText: '再等等吧'
+				})
+			}else{
+				// console.log('api:' + api + ' request success.');
+				//确保successCallback是一个函数
+				if (typeof successCallback === "function") {
+					//调用它，既然我们已经确定了它是可调用的
+					successCallback(res);
+				}
 			}
+		
 		},
 		fail: (err) => {
 			console.log('api:' + api + ' request failed:', err);
+			if(showDialog){
+				uni.showModal({
+					title: '提示',
+					content: '活动火爆，服务器拥堵中，请您稍后再试。技术支持电话：15022746250',
+					cancelText: '再等等吧'
+				})
+			}
+			
 			if (typeof failedCallback === "function") {
 				failedCallback(err);
 			}

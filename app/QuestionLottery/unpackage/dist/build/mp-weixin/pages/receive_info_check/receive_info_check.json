@@ -3,6 +3,10 @@
   "enablePullDownRefresh": false,
   "usingComponents": {
     "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
-    "u-input": "/uview-ui/components/u-input/u-input"
+    "u--form": "/uview-ui/components/u--form/u--form",
+    "u-form-item": "/uview-ui/components/u-form-item/u-form-item",
+    "u--text": "/uview-ui/components/u--text/u--text",
+    "u--textarea": "/uview-ui/components/u--textarea/u--textarea",
+    "u-button": "/uview-ui/components/u-button/u-button"
   }
 }

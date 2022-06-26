@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _answer_finish = _interopRequireDefault(__webpack_require__(/*! ./pages/answer_finish/answer_finish.vue */ 165));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_answer_finish.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -94,10 +94,10 @@ var components
 try {
   components = {
     uNavbar: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 213))
+      return Promise.all(/*! import() | uview-ui/components/u-navbar/u-navbar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-navbar/u-navbar")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-navbar/u-navbar.vue */ 231))
     },
     uButton: function() {
-      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 246))
+      return Promise.all(/*! import() | uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uview-ui/components/u-button/u-button.vue */ 264))
     }
   }
 } catch (e) {
@@ -206,21 +206,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 var _default =
 {
   data: function data() {
     return {
-      full: "恭喜您获得满分！您有机会获选择会员日普惠商品一件",
-      fullNoRemain: "恭喜您获得满分！活动火热，普惠商品已被领空，请明日在来",
-      noFull: "非满分提示”您未全部答对！再来一次，祝您好运！",
+      full: "",
+      fullNoRemain: "",
+      noFull: "",
       answerResult: {
-        score: 100,
-        hint: "提示语提示语提示语提示语提示语提示语提示语提示语提示语",
-        remain: 10 } };
+        score: '--',
+        hint: '--',
+        remain: '--' } };
 
 
   },
   onLoad: function onLoad() {
+
+    uni.showLoading({
+      title: '查询中...',
+      mask: true });
 
     var params = {
       phone_number: uni.getStorageSync('key_phone_num') };
@@ -239,23 +244,36 @@ var _default =
 
   },
   methods: {
+    onLeft: function onLeft() {
+      console.log('mmmmm');
+      uni.navigateTo({
+        url: '../index/index' });
+
+    },
     onChooseItem: function onChooseItem() {
+      uni.navigateTo({
+        // url:'../receive_info_check/receive_info_check'
+        url: '../lottery/lottery' });
 
     },
     onRetry: function onRetry() {
+      uni.navigateTo({
+        url: '../answering/answering' });
 
     },
     successCb: function successCb(rsp) {
       console.log('get_answer_result success, rsp======');
       console.log(rsp);
+      uni.hideLoading();
       if (rsp.data.error === 0) {
         this.answerResult = rsp.data.msg.answer_result;
       }
     },
-    failPhoneCb: function failPhoneCb(err) {
+    failCb: function failCb(err) {
       console.log('get_answer_result failed', err);
+      uni.hideLoading();
     },
-    completePhoneCb: function completePhoneCb(rsp) {} } };exports.default = _default;
+    completeCb: function completeCb(rsp) {} } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })

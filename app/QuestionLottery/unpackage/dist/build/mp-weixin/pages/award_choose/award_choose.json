@@ -2,6 +2,8 @@
   "navigationBarTitleText": "",
   "enablePullDownRefresh": false,
   "usingComponents": {
-    "u-navbar": "/uview-ui/components/u-navbar/u-navbar"
+    "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
+    "u-button": "/uview-ui/components/u-button/u-button",
+    "u-toast": "/uview-ui/components/u-toast/u-toast"
   }
 }

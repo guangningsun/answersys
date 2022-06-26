@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="background-color: #FFFFFF; padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#6141ea" 
+			bgColor="#5de992" 
 			title="身份认证" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -24,13 +24,13 @@
 			<view class="u-demo-block__content" style="margin-top: 15px;">
 				<u-input placeholder="请填写身份证" border="surround" shape="circle"></u-input>
 			</view>
-		    
+		    
 			
 			<u-checkbox-group
 				v-model="checkValue"
 				shape="square"
 				@change="change"
-				activeColor="#6141ea"
+				activeColor="#5de992"
 			>
 				<u-checkbox
 					:customStyle="{marginRight: '16px', marginTop:'20px', marginBottom:'20px'}"
@@ -47,7 +47,7 @@
 		<u-button
 		    text="提交"
 		    size="normal"
-			color="#6141ea"
+			color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
 			style="margin-top: 50px;"
 			@click="onSubmit"
 		></u-button>

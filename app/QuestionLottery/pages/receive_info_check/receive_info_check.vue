@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="background-color: #FFFFFF; padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#6141ea" 
+			bgColor="#5de992" 
 			title="信息确认" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -23,10 +23,9 @@
 					prop="userInfo.name"
 					labelWidth="100"
 					borderBottom>
-					<u--input
-						v-model="userInfo.name"
-						border="none"
-					></u--input>
+					<u--text
+						:text="userInfo.name"
+					></u--text>
 				</u-form-item>
 				<u-form-item
 					label="联系方式"
@@ -34,10 +33,9 @@
 					borderBottom
 					labelWidth="100"
 				>
-					<u--input
-						v-model="userInfo.tel"
-						border="none"
-					></u--input>
+					<u--text
+						:text="userInfo.tel"
+					></u--text>
 				</u-form-item>
 				<u-form-item
 					label="所属单位"
@@ -45,10 +43,9 @@
 					borderBottom
 					labelWidth="100"
 				>
-					<u--input
-						v-model="userInfo.company"
-						border="none"
-					></u--input>
+					<u--text
+						:text="userInfo.company"
+					></u--text>
 				</u-form-item>
 				
 				<u-form-item
@@ -57,10 +54,9 @@
 					borderBottom
 					labelWidth="100"
 				>
-					<u--input
-						v-model="userInfo.company_address"
-						border="none"
-					></u--input>
+					<u--text
+						:text="userInfo.company_address"
+					></u--text>
 				</u-form-item>
 				
 				<u-form-item
@@ -79,7 +75,7 @@
 			<u-button
 			    text="确认"
 			    size="normal"
-				color="#6141ea"
+				color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
 				style="margin-top: 50px; margin-bottom: 50px;"
 				@click="onConfirm"
 			></u-button>
@@ -93,15 +89,25 @@
 	export default {
 		data() {
 			return {
-				userInfo:{},
+				userInfo:{
+					name:'--',
+					tel:'--',
+					company:'--',
+					company_address:'--'
+				},
 				phoneNum:uni.getStorageSync('key_phone_num'),
 				remark:''
 			}
 		},
 		onLoad() {
 		
+			uni.showLoading({
+				title:'查询中...',
+				mask:true
+			})
+		
 			let params = {
-				phone_number: uni.getStorageSync('key_phone_num'),
+				phone_number: uni.getStorageSync('key_phone_num')
 			};
 			
 			this.requestWithMethod(
@@ -117,39 +123,44 @@
 			successCb(rsp) {
 				console.log('get_user_award_info success, rsp======');
 				console.log(rsp);
+				uni.hideLoading();
 				if(rsp.data.error === 0){
 					this.userInfo = rsp.data.msg.awardInfos
 				}
 			},
 			failCb(err) {
 				console.log('get_user_award_info failed', err);
+				uni.hideLoading()
 			},
 			completeCb(rsp) {},
 			
 			
 			onConfirm(){
-				if(getApp().isEmpty(this.remark)){
-					uni.navigateTo({
-						url:'../award_choose/award_choose'
-					})
-				} else {
-					let params = {
-						phone_number: uni.getStorageSync('key_phone_num'),
-					};
-					
-					this.requestWithMethod(
-						getApp().globalData.submit_user_info,
-						'POST',
-						params,
-						this.successConfirmCb,
-						this.failConfirmCb,
-						this.completeConfirmCb
-					);
-				}
+				
+				uni.showLoading({
+					title:'查询中...',
+					mask:true
+				})
+				let params = {
+					phone_number: uni.getStorageSync('key_phone_num'),
+					remark: this.remark,
+					apart_id: uni.getStorageSync('key_apart')
+				};
+				
+				this.requestWithMethod(
+					getApp().globalData.submit_user_info,
+					'POST',
+					params,
+					this.successConfirmCb,
+					this.failConfirmCb,
+					this.completeConfirmCb
+				);
+
 			},
 			successConfirmCb(rsp) {
 				console.log('submit_user_info success, rsp======');
 				console.log(rsp);
+				uni.hideLoading();
 				if(rsp.data.error === 0){
 					uni.navigateTo({
 						url:'../award_choose/award_choose'
@@ -157,6 +168,7 @@
 				}
 			},
 			failConfirmCb(err) {
+				uni.hideLoading();
 				console.log('submit_user_info failed', err);
 			},
 			completeConfirmCb(rsp) {},

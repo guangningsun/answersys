@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#6141ea" 
+			bgColor="#5de992" 
 			title="成绩排行" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -88,6 +88,9 @@
 			}
 		},
 		onLoad() {
+			uni.showLoading({
+				title:'查询中...'
+			})
 			this.requestWithMethod(
 				getApp().globalData.get_rankinfo,
 				'GET',
@@ -105,6 +108,7 @@
 			successCb(rsp) {
 				console.log('get_rankinfo success, rsp======');
 				console.log(rsp);
+				uni.hideLoading()
 				if(rsp.data.error === 0){
 					this.rankList = rsp.data.msg.rankList
 				}
@@ -112,6 +116,7 @@
 			},
 			failPhoneCb(err) {
 				console.log('get_rankinfo failed', err);
+				uni.hideLoading()
 			},
 			completePhoneCb(rsp) {}
 		}

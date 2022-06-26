@@ -3,24 +3,47 @@
 		<view class="padding-left-sm">
 			<image class="bg-set" src="../../static/activity_bg.jpg"></image>
 		</view>
-		<view class="flex justify-center" style="padding-top: 750rpx; width:100%;" @click="onStart">
-			<image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;" mode="aspectFit"></image>
-		</view>
-		
 		
 		<view
-			class="text-gray text-center justify-center padding-sm"
-			style="border-radius: 20upx; 
-			position:fixed; bottom:0; 
-			padding: 15upx; 
-			padding-bottom: 250upx; 
-			padding-top: 20upx;">
-			<view class="flex" style="margin-top: 50rpx; margin-left: 15upx; margin-right: 15upx">
-				<image src="../../static/btn_rule.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
+			v-show="!isActivityStart"
+			class="flex justify-center" 
+			style="padding-top: 750rpx; width:100%; ">
+			
+			<view 
+			style="font-size: 20px; 
+				border-radius: 20upx; 
+				color: #FFFFFF; 
+				padding-left: 30upx; 
+				padding-right: 30upx; 
+				padding-bottom: 20upx; 
+				padding-top: 20upx; 
+				margin-left: 40upx;
+				margin-right:40upx;
+				background-color: rgba(51, 52, 52, 0.5)">{{startMsg}}</view> 
+		</view>
+		
+		<view
+			v-if="isActivityStart && shouldShowContent"
+			class="flex text-gray justify-center align-center padding-sm"
+			style="border-radius: 20upx; position:fixed; bottom:0;padding-left: 20upx; padding-bottom: 220upx; padding-top: 10upx;"
+			>
+			<view class="justify-center " style="margin-top: 150upx; margin-left: 15upx; margin-right: 15upx">
+			  <image @click="onRule" src="../../static/btn_rule.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>			
+			</view>
+			<view v-show="isActivityStart" class="justify-center" style="padding-bottom: 250upx; "  @click="onStart">
+			  <image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;" mode="aspectFit"></image>
+			</view>
+			
+			<!-- <view v-show="isActivityStart" class="flex justify-center" style="padding-bottom: 120upx;"  @click="onStart">
+				<image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;" mode="aspectFit"></image>
+			</view>
+			<view class="flex justify-center " style="margin-top: 10rpx; margin-left: 15upx; margin-right: 15upx">
+				
+				<image @click="onRule" src="../../static/btn_rule.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
 				<image @click="onRank" src="../../static/btn_rank.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
 				<image @click="onRecord" src="../../static/btn_receive_record.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
-				<image @click="onWarmup" src="../../static/btn_warmup.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
-			</view>
+
+			</view> -->
 		</view>
 		
 		<view v-show="!shouldShowContent && showCenterIcon">
@@ -33,7 +56,7 @@
 				padding-bottom: 40upx; 
 				padding-top: 20upx;">
 				<button
-					class="bg-orange text-df"
+					class="bg-gradual-green text-df"
 					open-type="getPhoneNumber"
 					lang="zh_CN"
 					@getphonenumber="getPhoneNumber">
@@ -44,7 +67,7 @@
 		</view>
 		
 		<!-- 申请手机号modal -->
-		<view class="cu-modal bottom-modal" :class="modalName == 'PhoneModal' ? 'show' : ''">
+		<view class="cu-modal" :class="modalName == 'PhoneModal' ? 'show' : ''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">手机号登录</view>
@@ -53,11 +76,12 @@
 					</view>
 				</view>
 				<view class="padding-xl">{{ hint }}</view>
-				<view class="cu-bar bg-white">
-					<view class="flex justify-end action">
-						<button class="cu-btn text-gray" @tap="hideModal">拒绝</button>
+				<view class="cu-bar bg-white padding-bottom">
+					<view class="flex justify-end action" style="width: 100%;">
+						<button class="cu-btn line-gray lg text-gray" style="padding: 0 80upx;" @tap="hideModal">拒绝</button>
 						<button
-							class="cu-btn line-olive margin-left-sm"
+							class="cu-btn lg bg-gradual-purple margin-left-sm"
+							style="padding: 0 80upx;"
 							open-type="getPhoneNumber"
 							lang="zh_CN"
 							@getphonenumber="getPhoneNumber"
@@ -75,9 +99,10 @@
 <script>
 	export default {
 		data() {
+
 			return {
 				modalName: null,
-				
+				canGetPrize: true,
 				openid: '',
 				user_nickname: '',
 				user_phone: '',
@@ -89,20 +114,30 @@
 				shouldShowContent: false,
 				showCenterIcon: true,
 				
+				isActivityStart: false,
+				
+				isMember: false,
+				
+				memberMsg: '',
+				
+				startMsg:'',
+				
+				isLogin: false,
+				
 				hint:
 					'登录后可以完整使用服务。首次使用，需要授权获取您的手机号进行登录绑定。'
 				
 			}
 		},
-		onLoad: function(options) {
-			// console.log('======二维码解析参数========');
-			// console.log(options.q);
-			// var scene = decodeURIComponent(options.q); // 使用decodeURIComponent解析  获取当前二维码的网址
-			// var arr1 = scene.split('/');
-			// var apartId = arr1[arr1.length - 1];
-			// this.apartmentId = apartId;
+		onLoad: function(options) {			
+			console.log('======二维码解析参数========');
+			console.log(options.q);
+			var scene = decodeURIComponent(options.q); // 使用decodeURIComponent解析  获取当前二维码的网址
+			var arr1 = scene.split('/');
+			var apartId = arr1[arr1.length - 1];
+			this.apartmentId = apartId;
 
-			// uni.setStorageSync(getApp().globalData.key_cat, this.apartmentId);
+			uni.setStorageSync(getApp().globalData.key_apart, this.apartmentId);
 		},
 		onShow() {
 			this.user_phone = uni.getStorageSync(getApp().globalData.key_phone_num);
@@ -113,6 +148,9 @@
 				success: loginRes => {
 					console.log('+++code：' + loginRes.code);
 		
+					uni.showLoading({
+						title:'正在查询中...'
+					})
 					this.requestWithMethod(
 						getApp().globalData.api_login + loginRes.code,
 						'POST',
@@ -123,16 +161,62 @@
 					);
 				}
 			});
+			uni.showLoading({
+				title:'正在查询中...'
+			})
+			this.requestWithMethod(
+				getApp().globalData.is_in_activity_time,
+				'GET',
+				'',
+				this.successInActCb,
+				this.failInActCb,
+				this.completeInActCb
+			)
 		},
 		methods: {
-			onStart(){
-				uni.navigateTo({
-					url:'../answering/answering'
+			showAlreadyLottery(){
+				uni.showToast({
+					icon:"none",
+					title:'您已经抽奖，不能再次参与活动'
 				})
+			},
+			onStart(){
+				
+				if(this.apartmentId === 'undefined'){
+					uni.showToast({
+						icon:"none",
+						title:'请扫码参与活动'
+					})
+				} else if(!this.canGetPrize){
+					this.showAlreadyLottery()
+
+				} else {
+					uni.showLoading({
+						title:'正在查询中...'
+					})
+					let param = {
+						phone_number: uni.getStorageSync(getApp().globalData.key_phone_num)
+					}
+					
+					this.requestWithMethod(
+						getApp().globalData.is_member,
+						'POST',
+						param,
+						this.successIsMemberCb,
+						this.failIsMemberCb,
+						this.completeIsMemberCb
+					);
+				}
+				
 			},
 			onRank(){
 				uni.navigateTo({
 					url:'../rank/rank'
+				})
+			},
+			onRule(){
+				uni.navigateTo({
+					url:'../rule/rule'
 				})
 			},
 			onRecord(){
@@ -141,9 +225,9 @@
 				})
 			},
 			onWarmup(){
-				// uni.navigateTo({
-				// 	url:'../receive_history/receive_history'
-				// })
+				uni.navigateTo({
+					url:'../warmup/warmup'
+				})
 			},
 			showPhoneModal(e) {
 				this.modalName = e;
@@ -151,9 +235,66 @@
 			hideModal(e) {
 				this.modalName = null;
 			},
+			
+			successIsMemberCb(rsp) {
+				console.log('is_member success');
+				console.log(rsp);
+				uni.hideLoading()
+				this.isMember = rsp.data.is_member
+				this.memberMsg = rsp.data.msg
+				this.canGetPrize = rsp.data.can_get_prize
+				console.log('can_get_prize:' + this.canGetPrize)
+				uni.setStorageSync(getApp().globalData.key_can_get_prize, this.canGetPrize);
+				
+				if(!this.canGetPrize) {
+					this.showAlreadyLottery()
+					return
+				}
+				
+				if(this.isMember){
+					uni.navigateTo({
+						url:'../answering/answering'
+					})
+				}else{
+					uni.showToast({
+						title: this.memberMsg
+					})
+				}
+			},
+			failIsMemberCb(err) {
+				console.log('is_member failed', err);
+				uni.hideLoading()
+			},
+			completeIsMemberCb(rsp) {},
+			
+			////////////////////
+			successInActCb(rsp) {
+				console.log('is_in_activity_time success');
+				console.log(rsp)
+				console.log(rsp.statusCode + 'mmmk');
+				uni.hideLoading()
+				
+				this.isActivityStart = rsp.data.is_start
+				this.startMsg = rsp.data.msg				
+				
+				// this.isActivityStart = false
+				// this.startMsg = '今日物品已经领空，请明日再来。由于参与人数较多，平台较拥堵，我们将要对服务进行优化，保证活动明天顺利开展。'
+				
+				// if (rsp.data.error === 0) {
+				// 	this.isActivityStart = rsp.data.is_start
+				// 	this.startMsg = rsp.data.msg
+				// }
+			},
+			failInActCb(err) {
+				console.log('is_in_activity_time failed', err);
+				uni.hideLoading()
+			},
+			completeInActCb(rsp) {},
+			//////////////////////////////
 			successCb(rsp) {
 				console.log('weixin_sns success');
 				console.log(rsp);
+
 				if (rsp.data.error === 0) {
 					this.openid = rsp.data.openid;
 					let is_login = rsp.data.is_login;
@@ -172,7 +313,8 @@
 					} else {
 						// console.log('auth:' + user_auth);
 						uni.showLoading({
-							title: '登录中.......'
+							title: '登录中.......',
+							mask:true
 						});
 						this.requestUserInfo();
 					}
@@ -180,12 +322,15 @@
 			},
 			failCb(err) {
 				console.log('api_login failed', err);
+				uni.hideLoading()
 			},
 			completeCb(rsp) {},
 	/////
 			successGetUserInfoCb(rsp) {
 				uni.hideLoading();
+				console.log(rsp)
 				if (rsp.data.error === 0) {
+					
 					this.user_info = rsp.data.msg.user_info;
 					console.log(this.user_info);
 					
@@ -199,16 +344,8 @@
 					}else{
 						uni.setStorageSync(getApp().globalData.key_user_name,this.user_info[0].user_name);
 						uni.setStorageSync(getApp().globalData.key_phone_num,this.user_info[0].phone_number);
-
-						// if(!this.isEmpty(this.apartmentId)){
-						// 	uni.hideLoading();
-						// 	uni.navigateTo({
-						// 		url:'../category/category'
-						// 	})
-						// }else{
-							uni.hideLoading();
-							this.shouldShowContent = true;
-						// }
+						uni.hideLoading();
+						this.shouldShowContent = true;
 					}
 				}
 			},
@@ -240,24 +377,30 @@
 
 		///////////////
 
-		// 0: 普通用户， 1:主管,  2:办公室主任   3: 管理员
 		successPhoneCb(rsp) {
-			console.log('api_phone success, rsp======');
+			console.log('weixin_gusi success, rsp======');
 			console.log(rsp);
 			this.showCenterIcon = false;
-
+			
 			if (this.containsStr(rsp.errMsg, 'ok')) {
 				uni.setStorageSync(getApp().globalData.key_phone_num,rsp.data.purePhoneNumber);
-				// uni.setStorageSync(getApp().globalData.key_user_auth,rsp.data.auth);
-
-				// let auth = rsp.data.auth;
-				// console.log('phone cb auth: ' + auth);
 				uni.hideLoading();
 				this.requestUserInfo();
 			}
+			
+			if(rsp.data.is_exist === '1'){
+				// 用户存在
+			} else {
+				if(!uni.getStorageSync('key_key_is_update')){
+					// 用户不存在，进入信息登记页面
+					uni.navigateTo({
+						url:'../login/register'
+					})
+				}
+			}
 		},
 		failPhoneCb(err) {
-			console.log('api_phone failed', err);
+			console.log('weixin_gusi failed', err);
 		},
 		completePhoneCb(rsp) {},
 

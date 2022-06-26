@@ -9,7 +9,7 @@
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(createPage) {__webpack_require__(/*! uni-pages */ 5);
-var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 3));
+var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 4));
 var _index = _interopRequireDefault(__webpack_require__(/*! ./pages/index/index.vue */ 137));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}wx.__webpack_require_UNI_MP_PLUGIN__ = __webpack_require__;
 createPage(_index.default);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["createPage"]))
@@ -204,12 +204,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
+
     return {
       modalName: null,
-
+      canGetPrize: true,
       openid: '',
       user_nickname: '',
       user_phone: '',
@@ -221,20 +246,30 @@ var _default =
       shouldShowContent: false,
       showCenterIcon: true,
 
+      isActivityStart: false,
+
+      isMember: false,
+
+      memberMsg: '',
+
+      startMsg: '',
+
+      isLogin: false,
+
       hint:
       '登录后可以完整使用服务。首次使用，需要授权获取您的手机号进行登录绑定。' };
 
 
   },
   onLoad: function onLoad(options) {
-    // console.log('======二维码解析参数========');
-    // console.log(options.q);
-    // var scene = decodeURIComponent(options.q); // 使用decodeURIComponent解析  获取当前二维码的网址
-    // var arr1 = scene.split('/');
-    // var apartId = arr1[arr1.length - 1];
-    // this.apartmentId = apartId;
+    console.log('======二维码解析参数========');
+    console.log(options.q);
+    var scene = decodeURIComponent(options.q); // 使用decodeURIComponent解析  获取当前二维码的网址
+    var arr1 = scene.split('/');
+    var apartId = arr1[arr1.length - 1];
+    this.apartmentId = apartId;
 
-    // uni.setStorageSync(getApp().globalData.key_cat, this.apartmentId);
+    uni.setStorageSync(getApp().globalData.key_apart, this.apartmentId);
   },
   onShow: function onShow() {var _this = this;
     this.user_phone = uni.getStorageSync(getApp().globalData.key_phone_num);
@@ -244,6 +279,9 @@ var _default =
       provider: 'weixin',
       success: function success(loginRes) {
         console.log('+++code：' + loginRes.code);
+
+        uni.showLoading({
+          title: '正在查询中...' });
 
         _this.requestWithMethod(
         getApp().globalData.api_login + loginRes.code,
@@ -255,16 +293,62 @@ var _default =
 
       } });
 
+    uni.showLoading({
+      title: '正在查询中...' });
+
+    this.requestWithMethod(
+    getApp().globalData.is_in_activity_time,
+    'GET',
+    '',
+    this.successInActCb,
+    this.failInActCb,
+    this.completeInActCb);
+
   },
   methods: {
+    showAlreadyLottery: function showAlreadyLottery() {
+      uni.showToast({
+        icon: "none",
+        title: '您已经抽奖，不能再次参与活动' });
+
+    },
     onStart: function onStart() {
-      uni.navigateTo({
-        url: '../answering/answering' });
+
+      if (this.apartmentId === 'undefined') {
+        uni.showToast({
+          icon: "none",
+          title: '请扫码参与活动' });
+
+      } else if (!this.canGetPrize) {
+        this.showAlreadyLottery();
+
+      } else {
+        uni.showLoading({
+          title: '正在查询中...' });
+
+        var param = {
+          phone_number: uni.getStorageSync(getApp().globalData.key_phone_num) };
+
+
+        this.requestWithMethod(
+        getApp().globalData.is_member,
+        'POST',
+        param,
+        this.successIsMemberCb,
+        this.failIsMemberCb,
+        this.completeIsMemberCb);
+
+      }
 
     },
     onRank: function onRank() {
       uni.navigateTo({
         url: '../rank/rank' });
+
+    },
+    onRule: function onRule() {
+      uni.navigateTo({
+        url: '../rule/rule' });
 
     },
     onRecord: function onRecord() {
@@ -273,9 +357,9 @@ var _default =
 
     },
     onWarmup: function onWarmup() {
-      // uni.navigateTo({
-      // 	url:'../receive_history/receive_history'
-      // })
+      uni.navigateTo({
+        url: '../warmup/warmup' });
+
     },
     showPhoneModal: function showPhoneModal(e) {
       this.modalName = e;
@@ -283,9 +367,66 @@ var _default =
     hideModal: function hideModal(e) {
       this.modalName = null;
     },
+
+    successIsMemberCb: function successIsMemberCb(rsp) {
+      console.log('is_member success');
+      console.log(rsp);
+      uni.hideLoading();
+      this.isMember = rsp.data.is_member;
+      this.memberMsg = rsp.data.msg;
+      this.canGetPrize = rsp.data.can_get_prize;
+      console.log('can_get_prize:' + this.canGetPrize);
+      uni.setStorageSync(getApp().globalData.key_can_get_prize, this.canGetPrize);
+
+      if (!this.canGetPrize) {
+        this.showAlreadyLottery();
+        return;
+      }
+
+      if (this.isMember) {
+        uni.navigateTo({
+          url: '../answering/answering' });
+
+      } else {
+        uni.showToast({
+          title: this.memberMsg });
+
+      }
+    },
+    failIsMemberCb: function failIsMemberCb(err) {
+      console.log('is_member failed', err);
+      uni.hideLoading();
+    },
+    completeIsMemberCb: function completeIsMemberCb(rsp) {},
+
+    ////////////////////
+    successInActCb: function successInActCb(rsp) {
+      console.log('is_in_activity_time success');
+      console.log(rsp);
+      console.log(rsp.statusCode + 'mmmk');
+      uni.hideLoading();
+
+      this.isActivityStart = rsp.data.is_start;
+      this.startMsg = rsp.data.msg;
+
+      // this.isActivityStart = false
+      // this.startMsg = '今日物品已经领空，请明日再来。由于参与人数较多，平台较拥堵，我们将要对服务进行优化，保证活动明天顺利开展。'
+
+      // if (rsp.data.error === 0) {
+      // 	this.isActivityStart = rsp.data.is_start
+      // 	this.startMsg = rsp.data.msg
+      // }
+    },
+    failInActCb: function failInActCb(err) {
+      console.log('is_in_activity_time failed', err);
+      uni.hideLoading();
+    },
+    completeInActCb: function completeInActCb(rsp) {},
+    //////////////////////////////
     successCb: function successCb(rsp) {
       console.log('weixin_sns success');
       console.log(rsp);
+
       if (rsp.data.error === 0) {
         this.openid = rsp.data.openid;
         var is_login = rsp.data.is_login;
@@ -304,7 +445,8 @@ var _default =
         } else {
           // console.log('auth:' + user_auth);
           uni.showLoading({
-            title: '登录中.......' });
+            title: '登录中.......',
+            mask: true });
 
           this.requestUserInfo();
         }
@@ -312,12 +454,15 @@ var _default =
     },
     failCb: function failCb(err) {
       console.log('api_login failed', err);
+      uni.hideLoading();
     },
     completeCb: function completeCb(rsp) {},
     /////
     successGetUserInfoCb: function successGetUserInfoCb(rsp) {
       uni.hideLoading();
+      console.log(rsp);
       if (rsp.data.error === 0) {
+
         this.user_info = rsp.data.msg.user_info;
         console.log(this.user_info);
 
@@ -331,16 +476,8 @@ var _default =
         } else {
           uni.setStorageSync(getApp().globalData.key_user_name, this.user_info[0].user_name);
           uni.setStorageSync(getApp().globalData.key_phone_num, this.user_info[0].phone_number);
-
-          // if(!this.isEmpty(this.apartmentId)){
-          // 	uni.hideLoading();
-          // 	uni.navigateTo({
-          // 		url:'../category/category'
-          // 	})
-          // }else{
           uni.hideLoading();
           this.shouldShowContent = true;
-          // }
         }
       }
     },
@@ -372,24 +509,30 @@ var _default =
 
     ///////////////
 
-    // 0: 普通用户， 1:主管,  2:办公室主任   3: 管理员
     successPhoneCb: function successPhoneCb(rsp) {
-      console.log('api_phone success, rsp======');
+      console.log('weixin_gusi success, rsp======');
       console.log(rsp);
       this.showCenterIcon = false;
 
       if (this.containsStr(rsp.errMsg, 'ok')) {
         uni.setStorageSync(getApp().globalData.key_phone_num, rsp.data.purePhoneNumber);
-        // uni.setStorageSync(getApp().globalData.key_user_auth,rsp.data.auth);
-
-        // let auth = rsp.data.auth;
-        // console.log('phone cb auth: ' + auth);
         uni.hideLoading();
         this.requestUserInfo();
       }
+
+      if (rsp.data.is_exist === '1') {
+        // 用户存在
+      } else {
+        if (!uni.getStorageSync('key_key_is_update')) {
+          // 用户不存在，进入信息登记页面
+          uni.navigateTo({
+            url: '../login/register' });
+
+        }
+      }
     },
     failPhoneCb: function failPhoneCb(err) {
-      console.log('api_phone failed', err);
+      console.log('weixin_gusi failed', err);
     },
     completePhoneCb: function completePhoneCb(rsp) {},
 

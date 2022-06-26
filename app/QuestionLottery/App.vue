@@ -17,8 +17,15 @@
 			get_user_award_info:'get_user_award_info/',
 			submit_user_info:'submit_user_info/',
 			get_award_info:'get_award_info/',
-			revice_award:'revice_award/',
-			 
+			revice_award:'revice_award/',  //领取奖品，点击领取按钮触发
+			register_user:'register_user/', 
+			get_award_history:'get_award_history/',
+			award_user_info_confirm:'award_user_info_confirm/', // 领取奖品前信息确认
+			is_in_activity_time:'is_in_activity_time/',
+			is_member:'is_member/',
+			get_prize_info: 'get_prize_info/',
+			get_rule_info: 'get_rule_info/',
+			
 			
 			// key 值
 			key_user_name:'key_user_name',
@@ -26,7 +33,10 @@
 			key_wx_openid:'key_wx_openid',
 			key_user_head:'key_user_head',
 			key_user_nickname:'key_user_nickname',
-			key_phone_num:'key_phone_num' 
+			key_phone_num:'key_phone_num' ,
+			key_is_update:'key_is_update',
+			key_apart:'key_apart',
+			key_can_get_prize:'key_can_get_prize',
 		},
 			
 		onLaunch: function() {
