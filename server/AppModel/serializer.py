@@ -38,7 +38,7 @@ class AwardInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AwardInfo
-        fields = ('id','award_name','award_image','current_max')
+        fields = ('id','award_name','award_image','award_num','current_max')
 
 class UserAwardInfoSerializer(serializers.ModelSerializer):
 

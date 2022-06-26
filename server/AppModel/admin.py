@@ -65,10 +65,10 @@ class UserInfoAdmin(ImportExportModelAdmin):
 # 奖品管理
 @admin.register(AwardInfo)
 class AwardInfoAdmin(ImportExportModelAdmin): 
-    list_display=['award_name','award_image','current_max']
-    search_fields =('award_name','award_image','current_max')
+    list_display=['award_name','award_image','award_num','current_max']
+    search_fields =('award_name','award_image','award_num','current_max')
     fieldsets = [
-       ('用户数据', {'fields': ['award_name','award_image','current_max'], 'classes': ['']}),
+       ('用户数据', {'fields': ['award_name','award_image','award_num','current_max'], 'classes': ['']}),
     ]
     list_per_page = 15 
 

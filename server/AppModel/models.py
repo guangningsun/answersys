@@ -114,6 +114,7 @@ class ExamScore(models.Model):
 class AwardInfo(models.Model):
     award_name = models.CharField(max_length=200,verbose_name='奖品名字')
     award_image = models.ImageField(u'奖品图片',null=True, blank=True, upload_to='award_image')
+    award_num = models.CharField(max_length=200,verbose_name='奖品数量')
     current_max = models.CharField(max_length=200,verbose_name='当天被选择次数')
     
     class Meta:
