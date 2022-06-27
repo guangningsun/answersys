@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="background-color: #FFFFFF; padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="信息确认" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -10,6 +10,8 @@
 			placeholder
 			titleStyle="color: #FFFFFF;">
 		</u-navbar>
+		
+		<view class="bg-light-yellow2 text-purple padding-sm">{{hint}}</view>
 		
 		<view class="flex justify-center">
 			<image src="../../static/ic_comfirm.png"  style="width: 300upx; height: 300upx; margin-top: 10upx;" mode="aspectFit"></image>
@@ -47,7 +49,26 @@
 						:text="userInfo.company"
 					></u--text>
 				</u-form-item>
-				
+				<u-form-item
+					label="新增单位联系人"
+					prop="userInfo.company_connect"
+					borderBottom
+					labelWidth="100"
+				>
+					<u--text
+						:text="userInfo.company"
+					></u--text>
+				</u-form-item>
+				<u-form-item
+					label="联系人电话"
+					prop="userInfo.company_phone"
+					borderBottom
+					labelWidth="100"
+				>
+					<u--text
+						:text="userInfo.company"
+					></u--text>
+				</u-form-item>
 				<u-form-item
 					label="所属单位收货地址"
 					prop="userInfo.company_address"
@@ -75,7 +96,7 @@
 			<u-button
 			    text="确认"
 			    size="normal"
-				color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+				color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 				style="margin-top: 50px; margin-bottom: 50px;"
 				@click="onConfirm"
 			></u-button>
@@ -93,10 +114,14 @@
 					name:'--',
 					tel:'--',
 					company:'--',
-					company_address:'--'
+					company_address:'--',
+					company_connect: '--',
+					company_phone: '--'
 				},
+				hint: '请确认信息',
+				noInfoHint: '请联系更新',
 				phoneNum:uni.getStorageSync('key_phone_num'),
-				remark:''
+				remark:'',
 			}
 		},
 		onLoad() {
@@ -126,6 +151,28 @@
 				uni.hideLoading();
 				if(rsp.data.error === 0){
 					this.userInfo = rsp.data.msg.awardInfos
+					this.hint = rsp.data.msg.hint
+					this.noInfoHint = rsp.data.msg.noInfoHint
+					
+					if(this.userInfo === undefined || this.userInfo === {} || this.userInfo === ''){
+						// if(true){
+						uni.showModal({
+							content: this.noInfoHint,
+							title: '提示',
+							confirmText: "确认", // 确认按钮的文字  
+							showCancel: true, // 是否显示取消按钮，默认为 true
+							confirmColor: '#39B54A',
+							success: (res) => {
+							if(res.confirm) {  
+								uni.navigateTo({
+									url:'../index/index'
+								})
+							} else {  
+								console.log('cancel') //点击取消之后执行的代码
+								}  
+							}
+						})
+					}
 				}
 			},
 			failCb(err) {
@@ -163,7 +210,7 @@
 				uni.hideLoading();
 				if(rsp.data.error === 0){
 					uni.navigateTo({
-						url:'../award_choose/award_choose'
+						url:'../../answering/answering'
 					})
 				}
 			},

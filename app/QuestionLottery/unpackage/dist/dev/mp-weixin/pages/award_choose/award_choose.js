@@ -240,27 +240,37 @@ var _default =
         } }));
 
     },
-    onClickReceive: function onClickReceive(id) {
-      console.log(id);
-      uni.showLoading({
-        title: '领取中...',
-        mask: true });
+    onClickReceive: function onClickReceive(item) {
+      console.log('itemId: ', item.id);
+
+      var num = parseInt(item.award_num);
+
+      if (num <= 0) {
+        uni.showToast({
+          icon: "none",
+          title: '奖品剩余数量不足' });
+
+      } else {
+        uni.showLoading({
+          title: '领取中...',
+          mask: true });
 
 
-      var params = {
-        phone_number: uni.getStorageSync('key_phone_num'),
-        award_id: id,
-        apart_id: uni.getStorageSync('key_apart') };
+        var params = {
+          phone_number: uni.getStorageSync('key_phone_num'),
+          award_id: item.id,
+          apart_id: uni.getStorageSync('key_apart') };
 
 
-      this.requestWithMethod(
-      getApp().globalData.revice_award,
-      'POST',
-      params,
-      this.successReviceAwardCb,
-      this.failReviceAwardCb,
-      this.completeReviceAwardCb);
+        this.requestWithMethod(
+        getApp().globalData.revice_award,
+        'POST',
+        params,
+        this.successReviceAwardCb,
+        this.failReviceAwardCb,
+        this.completeReviceAwardCb);
 
+      }
     },
 
 

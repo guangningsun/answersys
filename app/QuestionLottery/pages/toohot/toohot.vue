@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style=" padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="提示" 
 			@rightClick="rightClick" 
 			@leftClick="onLeft"
@@ -20,7 +20,7 @@
 			<u-button
 			    text="返回"
 			    size="normal"
-				color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+				color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 				shape="circle"
 				style="margin-top: 100upx;"
 				@click="onRetry"

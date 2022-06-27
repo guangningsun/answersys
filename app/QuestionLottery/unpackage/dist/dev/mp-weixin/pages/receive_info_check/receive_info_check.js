@@ -253,6 +253,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -261,8 +282,12 @@ var _default =
         name: '--',
         tel: '--',
         company: '--',
-        company_address: '--' },
+        company_address: '--',
+        company_connect: '--',
+        company_phone: '--' },
 
+      hint: '请确认信息',
+      noInfoHint: '请联系更新',
       phoneNum: uni.getStorageSync('key_phone_num'),
       remark: '' };
 
@@ -294,6 +319,28 @@ var _default =
       uni.hideLoading();
       if (rsp.data.error === 0) {
         this.userInfo = rsp.data.msg.awardInfos;
+        this.hint = rsp.data.msg.hint;
+        this.noInfoHint = rsp.data.msg.noInfoHint;
+
+        if (this.userInfo === undefined || this.userInfo === {} || this.userInfo === '') {
+          // if(true){
+          uni.showModal({
+            content: this.noInfoHint,
+            title: '提示',
+            confirmText: "确认", // 确认按钮的文字  
+            showCancel: true, // 是否显示取消按钮，默认为 true
+            confirmColor: '#39B54A',
+            success: function success(res) {
+              if (res.confirm) {
+                uni.navigateTo({
+                  url: '../index/index' });
+
+              } else {
+                console.log('cancel'); //点击取消之后执行的代码
+              }
+            } });
+
+        }
       }
     },
     failCb: function failCb(err) {
@@ -331,7 +378,7 @@ var _default =
       uni.hideLoading();
       if (rsp.data.error === 0) {
         uni.navigateTo({
-          url: '../award_choose/award_choose' });
+          url: '../../answering/answering' });
 
       }
     },

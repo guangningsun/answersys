@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="答题" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -66,7 +66,7 @@
 			v-if="questionListShow[0].id === questionList.length"
 		    text="提交"
 		    size="normal"
-			color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+			color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 			style="margin-top: 50px;"
 			@click="onSubmit"
 		></u-button>
@@ -75,7 +75,7 @@
 			v-if="questionListShow[0].id < questionList.length"
 		    text="下一题"
 		    size="normal"
-			color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+			color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 			style="margin-top: 50px;"
 			:disabled="answerRadioValue[questionListShow[0].id-1] === undefined || answerRadioValue[questionListShow[0].id-1] === '' "
 			@click="onNext"

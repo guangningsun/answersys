@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="答题分析" 
 			@rightClick="rightClick" 
 			:autoBack="true"

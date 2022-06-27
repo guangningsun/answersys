@@ -2978,6 +2978,10 @@ scroll-view.cu-steps .cu-item {
 	background-color: #fdfd79;
 	color: #ffffff;
 }
+.bg-light-yellow2 {
+	background-color: #fcffc3;
+	color: #ffffff;
+}
 .bg-olive {
 	background-color: #8dc63f;
 	color: #ffffff;

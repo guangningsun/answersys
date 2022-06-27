@@ -2,7 +2,7 @@
 	<view  class="u-page bg-gradual-blue2" 
 	  style="background-image: url(../../static/lottery_bg.jpg); background-size:100% 100%; padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="领取奖品" 
 			:autoBack="false"
 			safeAreaInsetTop
@@ -30,7 +30,7 @@
 				<u-button
 				    text="返回"
 				    size="normal"
-					color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+					color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 					shape="circle"
 					@click="goBackIndex"
 				></u-button>

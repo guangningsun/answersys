@@ -4,8 +4,8 @@
     "miniprogram": {
       "list": [
         {
-          "name": "test",
-          "pathName": "pages/rule/rule",
+          "name": "",
+          "pathName": "pages/award_choose/award_choose",
           "query": "",
           "launchMode": "default",
           "scene": null

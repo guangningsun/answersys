@@ -378,14 +378,14 @@ var _default =
       console.log('can_get_prize:' + this.canGetPrize);
       uni.setStorageSync(getApp().globalData.key_can_get_prize, this.canGetPrize);
 
-      if (!this.canGetPrize) {
-        this.showAlreadyLottery();
-        return;
-      }
+      // if(!this.canGetPrize) {
+      // 	this.showAlreadyLottery()
+      // 	return
+      // }
 
       if (this.isMember) {
         uni.navigateTo({
-          url: '../answering/answering' });
+          url: '../../receive_info_check/receive_info_check' });
 
       } else {
         uni.showToast({

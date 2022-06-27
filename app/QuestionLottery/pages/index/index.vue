@@ -22,7 +22,7 @@
 				background-color: rgba(51, 52, 52, 0.5)">{{startMsg}}</view> 
 		</view>
 		
-		<view
+		<!-- <view
 			v-if="isActivityStart && shouldShowContent"
 			class="flex text-gray justify-center align-center padding-sm"
 			style="border-radius: 20upx; position:fixed; bottom:0;padding-left: 20upx; padding-bottom: 220upx; padding-top: 10upx;"
@@ -33,18 +33,18 @@
 			<view v-show="isActivityStart" class="justify-center" style="padding-bottom: 250upx; "  @click="onStart">
 			  <image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;" mode="aspectFit"></image>
 			</view>
+		</view> -->
+
+		<view v-show="isActivityStart" class="justify-center align-center" style="padding-bottom: 120upx; padding-top: 1150rpx;"  @click="onStart">
+			<image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;margin-top: 50upx;margin-left: 240upx;" mode="aspectFit"></image>
 			
-			<!-- <view v-show="isActivityStart" class="flex justify-center" style="padding-bottom: 120upx;"  @click="onStart">
-				<image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;" mode="aspectFit"></image>
-			</view>
 			<view class="flex justify-center " style="margin-top: 10rpx; margin-left: 15upx; margin-right: 15upx">
-				
 				<image @click="onRule" src="../../static/btn_rule.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
 				<image @click="onRank" src="../../static/btn_rank.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
 				<image @click="onRecord" src="../../static/btn_receive_record.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
-
-			</view> -->
+			</view>
 		</view>
+		
 		
 		<view v-show="!shouldShowContent && showCenterIcon">
 			<view
@@ -56,7 +56,7 @@
 				padding-bottom: 40upx; 
 				padding-top: 20upx;">
 				<button
-					class="bg-gradual-green text-df"
+					class="bg-gradual-orange text-df"
 					open-type="getPhoneNumber"
 					lang="zh_CN"
 					@getphonenumber="getPhoneNumber">
@@ -129,7 +129,7 @@
 				
 			}
 		},
-		onLoad: function(options) {			
+		onLoad: function(options) {
 			console.log('======二维码解析参数========');
 			console.log(options.q);
 			var scene = decodeURIComponent(options.q); // 使用decodeURIComponent解析  获取当前二维码的网址
@@ -246,14 +246,14 @@
 				console.log('can_get_prize:' + this.canGetPrize)
 				uni.setStorageSync(getApp().globalData.key_can_get_prize, this.canGetPrize);
 				
-				if(!this.canGetPrize) {
-					this.showAlreadyLottery()
-					return
-				}
+				// if(!this.canGetPrize) {
+				// 	this.showAlreadyLottery()
+				// 	return
+				// }
 				
 				if(this.isMember){
 					uni.navigateTo({
-						url:'../answering/answering'
+						url:'../../receive_info_check/receive_info_check'
 					})
 				}else{
 					uni.showToast({

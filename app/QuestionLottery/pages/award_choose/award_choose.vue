@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style=" padding-left: 20upx; padding-right: 20upx; height: 100%;">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="领取奖品" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -28,9 +28,9 @@
 					<u-button
 					    text="领取"
 					    size="small"
-						color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+						color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 						style="padding: 10upx; width: 60px; margin-right: 10upx;"
-						@click="onClickReceive(item.id)"
+						@click="onClickReceive(item)"
 					></u-button>
 				</view>
 				
@@ -81,27 +81,37 @@
 					}
 				})
 			},
-			onClickReceive(id){
-				console.log(id)
-				uni.showLoading({
-					title:'领取中...',
-					mask:true
-				})
+			onClickReceive(item){
+				console.log('itemId: ', item.id)
 				
-				let params = {
-					phone_number: uni.getStorageSync('key_phone_num'),
-					award_id:id,
-					apart_id: uni.getStorageSync('key_apart')
-				};
+				let num = parseInt(item.award_num)
 				
-				this.requestWithMethod(
-					getApp().globalData.revice_award,
-					'POST',
-					params,
-					this.successReviceAwardCb,
-					this.failReviceAwardCb,
-					this.completeReviceAwardCb
-				);
+				if (num <= 0){
+					uni.showToast({
+						icon:"none",
+						title:'奖品剩余数量不足'
+					})
+				}else{
+					uni.showLoading({
+						title:'领取中...',
+						mask:true
+					})
+					
+					let params = {
+						phone_number: uni.getStorageSync('key_phone_num'),
+						award_id:item.id,
+						apart_id: uni.getStorageSync('key_apart')
+					};
+					
+					this.requestWithMethod(
+						getApp().globalData.revice_award,
+						'POST',
+						params,
+						this.successReviceAwardCb,
+						this.failReviceAwardCb,
+						this.completeReviceAwardCb
+					);
+				}
 			},
 			
 			

@@ -1,7 +1,7 @@
 <template>
 	<view class="u-page" style="background-color: #FFFFFF; height: 1600rpx">
 		<u-navbar
-			bgColor="#5de992" 
+			bgColor="#8145e1"
 			title="登录" 
 			@rightClick="rightClick" 
 			:autoBack="true"
@@ -40,7 +40,7 @@
 								type="success"
 								size="mini"
 								shape="circle"
-								color="linear-gradient(to right, rgb(13, 217, 128), rgb(105, 222, 162))"
+								color="linear-gradient(to right, rgb(124, 72, 212), rgb(154, 94, 219))"
 							></u-button>
 						</template>
 					<!-- #ifndef APP-NVUE -->

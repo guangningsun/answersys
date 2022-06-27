@@ -252,9 +252,9 @@ var _default =
     },
     onChooseItem: function onChooseItem() {
       uni.navigateTo({
-        // url:'../receive_info_check/receive_info_check'
-        url: '../lottery/lottery' });
-
+        url: '../../award_choose/award_choose'
+        // url:'../lottery/lottery'
+      });
     },
     onRetry: function onRetry() {
       uni.navigateTo({
