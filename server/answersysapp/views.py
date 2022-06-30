@@ -212,7 +212,8 @@ def get_answer_result(request):
             ans_res ={}
             ans_res["score"]= eslist.score
             if eslist.score == 100:
-                ans_res["hint"]="恭喜您获得满分！您获得1次抽奖机会"
+                # ans_res["hint"]="恭喜您获得满分！您获得1次抽奖机会"
+                ans_res["hint"]="恭喜您获得满分！您有机会获得会员日普惠商品一件"
             else:
                 ans_res["hint"]="继续努力"
             ans_res["remain"] = _compute_remind_award_num()
@@ -377,30 +378,35 @@ def get_user_award_info(request):
     if request.method == 'POST':
         try:
             phone_number = request.data["phone_number"]
-        except KeyError as err:
-            logger.error('参数错误.')
-            return HttpResponseBadRequest()
-        awards = UserAward.objects.filter(phone_number=phone_number)
-        if awards.count() == 0:
+            awards = UserAward.objects.filter(phone_number=phone_number)
             user_info = UserInfo.objects.get(phone_number=phone_number)
             company_info = CompanyInfo.objects.get(company_name=user_info.company_name)
-            tmp = {}
-            tmp['name'] = user_info.user_name
-            tmp['tel'] = user_info.phone_number
-            tmp['labour'] = user_info.labour_union
-            tmp['company'] = user_info.company_name
-            tmp['company_address'] = company_info.company_address
-            res_json = {"error": 0,"msg": {"awardInfos": tmp }}
+            if awards.count() == 0:
+                tmp = {}
+                tmp['name'] = user_info.user_name
+                tmp['tel'] = user_info.phone_number
+                tmp['labour'] = user_info.labour_union
+                tmp['company'] = user_info.company_name
+                tmp['company_address'] = company_info.company_address
+                tmp['company_connect'] = company_info.company_connect
+                tmp['company_phone'] = company_info.company_phone
+                res_json = {"error": 0,"msg": {"awardInfos": tmp ,"hint": '顶部提示',"noInfoHint": '请联系基层单位联系人更新您的个人信息后才能正常参加活动'}}
+                return Response(res_json)
+            award = awards[0]
+            tmp={}
+            tmp['name'] = award.user_name
+            tmp['tel'] = award.phone_number
+            tmp['labour'] = award.labour_name
+            tmp['company'] = award.company_name
+            tmp['company_address'] = award.company_address
+            tmp['company_connect'] = company_info.company_connect
+            tmp['company_phone'] = company_info.company_phone
+            res_json = {"error": 0,"msg": {"awardInfos": tmp ,"hint": '顶部提示',"noInfoHint": '请联系基层单位联系人更新您的个人信息后才能正常参加活动'}}
             return Response(res_json)
-        award = awards[0]
-        tmp={}
-        tmp['name'] = award.user_name
-        tmp['tel'] = award.phone_number
-        tmp['labour'] = award.labour_name
-        tmp['company'] = award.company_name
-        tmp['company_address'] = award.company_address
-        res_json = {"error": 0,"msg": {"awardInfos": tmp }}
-        return Response(res_json)
+        except Exception as e:
+            logger.error('参数错误.',e)
+            res_json = {"error": 0,"msg":  { "awardInfos": {}, "hint": '顶部提示',"noInfoHint": '请联系基层单位联系人更新您的个人信息后才能正常参加活动'} }
+            return Response(res_json)
 
 
 def _compute_remind_award_num():
@@ -441,21 +447,29 @@ def revice_award(request):
                     # 如果没有领取记录，且当天还有奖品可领
                     if _compute_remind_award_num() > 0 :
                         cpi = CompanyInfo.objects.get(id=apart_id)
-                        ua = UserAward(user_name=user_info.user_name,
-                            phone_number=phone_number,
-                        company_address=cpi.company_address,
-                        company_name=cpi.company_name,
-                        award_name=AwardInfo.objects.get(id=award_id).award_name,
-                        labour_name=user_info.labour_union,
-                        award_image=AwardInfo.objects.get(id=award_id).award_image,
-                        is_finished=True)
-                        ua.save()
-                        # 更新活动奖品数量
-                        ai = ActionInfo.objects.get(action_name='安全月活动第一次')
-                        ai.current_remind_num = str(int(ai.current_remind_num) -1)
-                        ai.save()
-                        res_json = {"error": 0,"msg":"已登记领奖"}
-                        return Response(res_json)
+                        aw = AwardInfo.objects.get(id=award_id)
+                        if int(aw.award_num)>0:
+                            ua = UserAward(user_name=user_info.user_name,
+                                phone_number=phone_number,
+                            company_address=cpi.company_address,
+                            company_name=cpi.company_name,
+                            award_name=aw.award_name,
+                            labour_name=user_info.labour_union,
+                            award_image=aw.award_image,
+                            is_finished=True)
+                            ua.save()
+                            # 更新奖品数量
+                            aw.award_num = str(int(aw.award_num) -1)
+                            aw.save()
+                            # 更新活动奖品数量
+                            ai = ActionInfo.objects.get(action_name='七一活动')
+                            ai.current_remind_num = str(int(ai.current_remind_num) -1)
+                            ai.save()
+                            res_json = {"error": 0,"msg":"已登记领奖"}
+                            return Response(res_json)
+                        else:
+                            res_json = {"error": 0,"msg":"该奖品今日已无库存"}
+                            return Response(res_json) 
                     else:
                         res_json = {"error": 0,"msg":"恭喜您获得满分！活动火热，普惠商品已被领空，请明日在来"}
                         return Response(res_json)
@@ -623,3 +637,13 @@ def get_prize_info(request):
             res_json = {"is_member": False,"msg": "对不起您不是会员，请联系管理员"}
             return Response(res_json)
 
+
+
+
+#获取规则接口
+@api_view(['GET'])
+def get_rule_info(request):
+    data={
+    "rule_content": '1.活动时间：2022年7月1日至7月3日（具体时间以微信通知为准）；\n2.参与范围：经开区在库职工；\n3.每人只有一次领取物品机会，当天领完即止；\n4.请扫描本单位专属二维码参加活动，避免信息不匹配造成不能正常参加活动，或者奖品不能送达个人；\n5.普惠物品将送至职工所在单位；\n技术支持：孙照瑛  联系电话：15022746250'
+    }
+    return Response(data)

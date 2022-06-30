@@ -27,6 +27,8 @@ urlpatterns = [
     path('is_in_activity_time/',views.is_in_activity_time),
     path('is_member/',views.is_member),
     path('get_prize_info/',views.get_prize_info),
+    path('get_rule_info/',views.get_rule_info),
+    
     
     
     

@@ -42,7 +42,7 @@ class UserInfo(models.Model):
         ("2","群众"),
     ]
     user_name = models.CharField(max_length=200,verbose_name='用户名')
-    nick_name = models.CharField(max_length=200,verbose_name='微信名')
+    nick_name = models.CharField(max_length=200,verbose_name='微信名',default="-")
     gender = models.CharField(max_length=20,verbose_name='性别', choices=gender_choice,default=1)
     nation = models.CharField(max_length=200,verbose_name='民族', choices=nations,default=0)
     policy_role = models.CharField(max_length=20,verbose_name='政治面貌', choices=policy_roles,default=2)
