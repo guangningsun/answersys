@@ -96,7 +96,7 @@
 			},
 			onChooseItem(){
 				uni.navigateTo({
-					url:'../../award_choose/award_choose'
+					url:'../award_choose/award_choose'
 					// url:'../lottery/lottery'
 				})
 			},

@@ -5,7 +5,7 @@
       "list": [
         {
           "name": "",
-          "pathName": "pages/award_choose/award_choose",
+          "pathName": "pages/rule/rule",
           "query": "",
           "launchMode": "default",
           "scene": null

@@ -20,7 +20,7 @@
 						<text class="title text-df text-black justify-center justify-start align-start">{{item.award_name}}</text>
 					</view>
 					<view class="margin-top-sm">
-						<text class="title text-sm text-gray justify-center justify-start align-start ">今日剩余{{item.current_max}}件</text>
+						<text class="title text-sm text-gray justify-center justify-start align-start ">今日剩余{{item.award_num}}件</text>
 					</view>
 				</view>
 
@@ -51,7 +51,7 @@
 				awardInfoList:[]
 			}
 		},
-		onLoad() {
+		onShow() {
 			uni.showLoading({
 				title:'查询中...',
 				mask:true
@@ -68,6 +68,9 @@
 				this.failCb,
 				this.completeCb
 			);
+		},
+		onLoad() {
+			
 		},
 		
 		methods: {
@@ -97,10 +100,25 @@
 						mask:true
 					})
 					
+					let apartId
+					// #ifdef MP-WEIXIN
+					    // 获取当前帐号信息
+					    const accountInfo = wx.getAccountInfoSync();
+					    console.log(accountInfo)
+					    // env类型 develop:开发版、trial:体验版、release:正式版
+					    const envWx = accountInfo.miniProgram.envVersion;
+					    if(envWx === 'release'){
+					        apartId = uni.getStorageSync('key_apart')
+					    }else{
+					        apartId = 1507
+					    }
+					// #endif
+					console.log('mak test2', apartId)
+					
 					let params = {
 						phone_number: uni.getStorageSync('key_phone_num'),
 						award_id:item.id,
-						apart_id: uni.getStorageSync('key_apart')
+						apart_id: apartId
 					};
 					
 					this.requestWithMethod(

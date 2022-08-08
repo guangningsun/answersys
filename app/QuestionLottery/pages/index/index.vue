@@ -136,6 +136,8 @@
 			var arr1 = scene.split('/');
 			var apartId = arr1[arr1.length - 1];
 			this.apartmentId = apartId;
+			
+			
 
 			uni.setStorageSync(getApp().globalData.key_apart, this.apartmentId);
 		},
@@ -182,7 +184,22 @@
 			},
 			onStart(){
 				
-				if(this.apartmentId === 'undefined'){
+				let apartId
+				// #ifdef MP-WEIXIN
+				    // 获取当前帐号信息
+				    const accountInfo = wx.getAccountInfoSync();
+				    console.log(accountInfo)
+				    // env类型 develop:开发版、trial:体验版、release:正式版
+				    const envWx = accountInfo.miniProgram.envVersion;
+				    if(envWx === 'release'){
+				        apartId = this.apartmentId
+				    }else{
+				        apartId = 1507
+				    }
+				// #endif
+				console.log('mak testf', apartId)
+				
+				if(apartId === 'undefined'){
 					uni.showToast({
 						icon:"none",
 						title:'请扫码参与活动'
@@ -253,7 +270,7 @@
 				
 				if(this.isMember){
 					uni.navigateTo({
-						url:'../../receive_info_check/receive_info_check'
+						url:'../receive_info_check/receive_info_check'
 					})
 				}else{
 					uni.showToast({

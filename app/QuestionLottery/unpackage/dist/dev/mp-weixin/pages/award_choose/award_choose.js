@@ -210,7 +210,7 @@ var _default =
       awardInfoList: [] };
 
   },
-  onLoad: function onLoad() {
+  onShow: function onShow() {
     uni.showLoading({
       title: '查询中...',
       mask: true });
@@ -226,6 +226,9 @@ var _default =
     this.successCb,
     this.failCb,
     this.completeCb);
+
+  },
+  onLoad: function onLoad() {
 
   },
 
@@ -256,10 +259,25 @@ var _default =
           mask: true });
 
 
+        var apartId;
+
+        // 获取当前帐号信息
+        var accountInfo = wx.getAccountInfoSync();
+        console.log(accountInfo);
+        // env类型 develop:开发版、trial:体验版、release:正式版
+        var envWx = accountInfo.miniProgram.envVersion;
+        if (envWx === 'release') {
+          apartId = uni.getStorageSync('key_apart');
+        } else {
+          apartId = 1507;
+        }
+
+        console.log('mak test2', apartId);
+
         var params = {
           phone_number: uni.getStorageSync('key_phone_num'),
           award_id: item.id,
-          apart_id: uni.getStorageSync('key_apart') };
+          apart_id: apartId };
 
 
         this.requestWithMethod(

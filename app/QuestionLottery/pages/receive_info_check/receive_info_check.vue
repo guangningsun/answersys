@@ -49,14 +49,14 @@
 						:text="userInfo.company"
 					></u--text>
 				</u-form-item>
-				<u-form-item
+				<!-- <u-form-item
 					label="新增单位联系人"
 					prop="userInfo.company_connect"
 					borderBottom
 					labelWidth="100"
 				>
 					<u--text
-						:text="userInfo.company"
+						:text="userInfo.company_connect"
 					></u--text>
 				</u-form-item>
 				<u-form-item
@@ -66,9 +66,9 @@
 					labelWidth="100"
 				>
 					<u--text
-						:text="userInfo.company"
+						:text="userInfo.company_phone"
 					></u--text>
-				</u-form-item>
+				</u-form-item> -->
 				<u-form-item
 					label="所属单位收货地址"
 					prop="userInfo.company_address"
@@ -184,6 +184,14 @@
 			
 			onConfirm(){
 				
+				if(this.userInfo.tel === '--' || this.isEmpty(this.userInfo.tel)){
+					uni.showToast({
+						icon:"none",
+						title:'请填写正确的手机号'
+					})
+					return
+				}
+				
 				uni.showLoading({
 					title:'查询中...',
 					mask:true
@@ -210,7 +218,7 @@
 				uni.hideLoading();
 				if(rsp.data.error === 0){
 					uni.navigateTo({
-						url:'../../answering/answering'
+						url:'../answering/answering'
 					})
 				}
 			},

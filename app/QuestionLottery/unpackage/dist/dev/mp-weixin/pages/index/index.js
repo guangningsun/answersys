@@ -269,6 +269,8 @@ var _default =
     var apartId = arr1[arr1.length - 1];
     this.apartmentId = apartId;
 
+
+
     uni.setStorageSync(getApp().globalData.key_apart, this.apartmentId);
   },
   onShow: function onShow() {var _this = this;
@@ -314,7 +316,22 @@ var _default =
     },
     onStart: function onStart() {
 
-      if (this.apartmentId === 'undefined') {
+      var apartId;
+
+      // 获取当前帐号信息
+      var accountInfo = wx.getAccountInfoSync();
+      console.log(accountInfo);
+      // env类型 develop:开发版、trial:体验版、release:正式版
+      var envWx = accountInfo.miniProgram.envVersion;
+      if (envWx === 'release') {
+        apartId = this.apartmentId;
+      } else {
+        apartId = 1507;
+      }
+
+      console.log('mak testf', apartId);
+
+      if (apartId === 'undefined') {
         uni.showToast({
           icon: "none",
           title: '请扫码参与活动' });
@@ -385,7 +402,7 @@ var _default =
 
       if (this.isMember) {
         uni.navigateTo({
-          url: '../../receive_info_check/receive_info_check' });
+          url: '../receive_info_check/receive_info_check' });
 
       } else {
         uni.showToast({

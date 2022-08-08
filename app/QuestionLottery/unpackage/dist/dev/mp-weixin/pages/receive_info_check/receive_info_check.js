@@ -352,6 +352,14 @@ var _default =
 
     onConfirm: function onConfirm() {
 
+      if (this.userInfo.tel === '--' || this.isEmpty(this.userInfo.tel)) {
+        uni.showToast({
+          icon: "none",
+          title: '请填写正确的手机号' });
+
+        return;
+      }
+
       uni.showLoading({
         title: '查询中...',
         mask: true });
@@ -378,7 +386,7 @@ var _default =
       uni.hideLoading();
       if (rsp.data.error === 0) {
         uni.navigateTo({
-          url: '../../answering/answering' });
+          url: '../answering/answering' });
 
       }
     },
