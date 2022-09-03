@@ -22,10 +22,10 @@
 				background-color: rgba(51, 52, 52, 0.5)">{{startMsg}}</view> 
 		</view>
 		
-		<!-- <view
+		<view
 			v-if="isActivityStart && shouldShowContent"
 			class="flex text-gray justify-center align-center padding-sm"
-			style="border-radius: 20upx; position:fixed; bottom:0;padding-left: 20upx; padding-bottom: 220upx; padding-top: 10upx;"
+			style="border-radius: 20upx; position:fixed; bottom:0;padding-left: 20upx; padding-bottom: 200upx; padding-top: 10upx;"
 			>
 			<view class="justify-center " style="margin-top: 150upx; margin-left: 15upx; margin-right: 15upx">
 			  <image @click="onRule" src="../../static/btn_rule.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>			
@@ -33,9 +33,9 @@
 			<view v-show="isActivityStart" class="justify-center" style="padding-bottom: 250upx; "  @click="onStart">
 			  <image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;" mode="aspectFit"></image>
 			</view>
-		</view> -->
+		</view>
 
-		<view v-show="isActivityStart" class="justify-center align-center" style="padding-bottom: 120upx; padding-top: 1150rpx;"  @click="onStart">
+		<!-- <view v-show="isActivityStart" class="justify-center align-center" style="padding-bottom: 120upx; padding-top: 1150rpx;"  @click="onStart">
 			<image id="animat" src="../../static/btn_start.png" style="width: 300upx; height: 100upx;margin-top: 50upx;margin-left: 240upx;" mode="aspectFit"></image>
 			
 			<view class="flex justify-center " style="margin-top: 10rpx; margin-left: 15upx; margin-right: 15upx">
@@ -43,7 +43,7 @@
 				<image @click="onRank" src="../../static/btn_rank.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
 				<image @click="onRecord" src="../../static/btn_receive_record.png" style="width: 150upx; height: 100upx; margin: 10rpx;" mode="aspectFit"></image>
 			</view>
-		</view>
+		</view> -->
 		
 		
 		<view v-show="!shouldShowContent && showCenterIcon">

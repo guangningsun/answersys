@@ -137,6 +137,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/lottery/lotteryV2",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"mp-alipay": {
@@ -144,7 +153,7 @@
 			"transparentTitle": "always",
 			"allowsBounceVertical": "NO"
 		},
-		"navigationBarBackgroundColor": "#5de992",
+		"navigationBarBackgroundColor": "#8145e1",
 		"navigationBarTitleText": "智慧群团",
 		"navigationStyle": "custom",
 		"navigationBarTextStyle": "white",

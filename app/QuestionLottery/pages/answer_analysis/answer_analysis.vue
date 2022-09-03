@@ -21,7 +21,7 @@
 					<u-radio-group
 						v-model="radiovalue5" 
 						placement="column"
-						activeColor="#5de992"
+						activeColor="#8145e1"
 					>
 						<u-radio
 							:customStyle="{marginBottom: '8px'}"
@@ -49,7 +49,7 @@
 					<u-radio-group
 						v-model="radiovalue5" 
 						placement="column"
-						activeColor="#5de992"
+						activeColor="#8145e1"
 					>
 						<u-radio
 							:customStyle="{marginBottom: '8px'}"

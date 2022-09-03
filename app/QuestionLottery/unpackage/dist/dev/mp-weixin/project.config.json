@@ -9,7 +9,6 @@
     "coverView": true,
     "es6": false,
     "postcss": true,
-    "compileHotReLoad": false,
     "lazyloadPlaceholderEnable": false,
     "preloadBackgroundData": false,
     "minified": true,

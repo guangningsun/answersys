@@ -3,6 +3,7 @@
   "enablePullDownRefresh": false,
   "usingComponents": {
     "u-navbar": "/uview-ui/components/u-navbar/u-navbar",
+    "u-count-down": "/uview-ui/components/u-count-down/u-count-down",
     "u-tag": "/uview-ui/components/u-tag/u-tag",
     "u--text": "/uview-ui/components/u--text/u--text",
     "u-checkbox-group": "/uview-ui/components/u-checkbox-group/u-checkbox-group",

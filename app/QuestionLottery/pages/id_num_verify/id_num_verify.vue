@@ -30,7 +30,7 @@
 				v-model="checkValue"
 				shape="square"
 				@change="change"
-				activeColor="#5de992"
+				activeColor="#8145e1"
 			>
 				<u-checkbox
 					:customStyle="{marginRight: '16px', marginTop:'20px', marginBottom:'20px'}"

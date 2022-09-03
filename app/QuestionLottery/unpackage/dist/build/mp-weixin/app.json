@@ -13,11 +13,12 @@
     "pages/award_choose/award_choose",
     "pages/login/register",
     "pages/toohot/toohot",
-    "pages/lottery/lottery"
+    "pages/lottery/lottery",
+    "pages/lottery/lotteryV2"
   ],
   "subPackages": [],
   "window": {
-    "navigationBarBackgroundColor": "#5de992",
+    "navigationBarBackgroundColor": "#8145e1",
     "navigationBarTitleText": "智慧群团",
     "navigationStyle": "custom",
     "navigationBarTextStyle": "white",

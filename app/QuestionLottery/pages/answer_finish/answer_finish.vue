@@ -96,8 +96,8 @@
 			},
 			onChooseItem(){
 				uni.navigateTo({
-					url:'../award_choose/award_choose'
-					// url:'../lottery/lottery'
+					// url:'../award_choose/award_choose'
+					url:'../lottery/lotteryV2'
 				})
 			},
 			onRetry(){

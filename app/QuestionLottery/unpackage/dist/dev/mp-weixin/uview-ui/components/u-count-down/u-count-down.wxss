@@ -1,0 +1,18 @@
+@charset "UTF-8";
+/* 水平间距 */
+/* 水平间距 */
+view.data-v-7ebf7480, scroll-view.data-v-7ebf7480, swiper-item.data-v-7ebf7480 {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  flex-grow: 0;
+  flex-basis: auto;
+  align-items: stretch;
+  align-content: flex-start;
+}
+.u-count-down__text.data-v-7ebf7480 {
+  color: #606266;
+  font-size: 15px;
+  line-height: 22px;
+}
+

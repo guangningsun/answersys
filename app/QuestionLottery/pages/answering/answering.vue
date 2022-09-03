@@ -10,6 +10,31 @@
 			placeholder
 			titleStyle="color: #FFFFFF;">
 		</u-navbar>
+		
+		<view class="u-demo-block__content countdownBlock">
+			<u-count-down
+			    :time="15 * 60 * 1000"
+			    format="HH:mm:ss"
+			    autoStart
+			    millisecond
+			    @change="onChange"
+				@finish="finish"
+			>
+				<view class="time">
+					<view class="time__custom">
+						<text class="time__custom__item">{{ timeData.hours>10?timeData.hours:'0'+timeData.hours}}</text>
+					</view>
+					<text class="time__doc">:</text>
+					<view class="time__custom">
+						<text class="time__custom__item">{{ timeData.minutes === 0 ? '00' : timeData.minutes }}</text>
+					</view>
+					<text class="time__doc">:</text>
+					<view class="time__custom">
+						<text class="time__custom__item">{{ timeData.seconds === 0 ? '00' : timeData.seconds }}</text>
+					</view>
+				</view>
+			</u-count-down>
+		</view>
 
 		<view class="u-demo-block" v-for="(item, index) in questionListShow" :key="index"  style="margin-top: 30upx; margin-bottom: 30upx; padding: 15upx; border-radius: 12upx; background-color: #FFFFFF;">
 			<view class="flex" style="margin-top: 5upx; margin-bottom: 5upx;">
@@ -25,7 +50,7 @@
 						placement="column"
 						@change="checkboxChange"
 						:borderBottom="true"
-						activeColor="#5de992"
+						activeColor="#8145e1"
 						iconPlacement="right"
 					>
 						<u-checkbox
@@ -45,7 +70,7 @@
 						v-model="answerRadioValue[item.id-1]"
 						placement="column"
 						:borderBottom="true"
-						activeColor="#5de992"
+						activeColor="#8145e1"
 						iconPlacement="right"
 					>
 						<u-radio
@@ -97,7 +122,11 @@
 				
 				currentQuestionId:1,
 				
-				answerWithPid:[]
+				answerWithPid:[],
+				
+				timeData: {},
+				
+				isClickSubmit: false
 			}
 		},
 		onLoad() {
@@ -166,6 +195,8 @@
 				console.log('get result')
 				console.log(this.answerRadioValue)
 				
+				this.isClickSubmit = true
+				
 				uni.showLoading({
 					title: '正在提交....',
 					mask:true
@@ -220,11 +251,104 @@
 				this.questionListShow.push(this.questionList[item.id])
 				this.currentQuestionId = this.questionListShow[0].pid
 				
+			},
+			onChange(e) {
+				this.timeData = e
+			},
+			finish() {
+				// 时间结束，自动提交
+				if (!this.isClickSubmit) {
+					console.log('时间结束，自动提交')
+					this.onSubmit()
+				}
 			}
 		}
 	}
 </script>
 
-<style>
+<style lang="scss">
+	.u-page {
+		
+	}
+	.countdownBlock{
+		margin-top: 10px
+	}
 
+	.time {
+		@include flex;
+		align-items: center;
+
+		&__custom {
+			margin-top: 4px;
+			width: 22px;
+			height: 22px;
+			background-color: #fea747;
+			border-radius: 4px;
+			/* #ifndef APP-NVUE */
+			display: flex;
+			/* #endif */
+			justify-content: center;
+			align-items: center;
+
+			&__item {
+				color: #fff;
+				font-size: 12px;
+				text-align: center;
+			}
+		}
+
+		&__doc {
+			color: $u-primary;
+			padding: 0px 4px;
+		}
+
+		&__item {
+			color: #606266;
+			font-size: 15px;
+			margin-right: 4px;
+		}
+	}
+
+	.u-view {
+		padding: 40px 20px 0px 20px;
+
+		&__title {
+			font-size: 14px;
+			color: rgb(143, 156, 162);
+			margin-bottom: 10px;
+		}
+	}
+
+	// 手动控制的btn样式
+	.count-down {
+		&__grid-item {
+			width: 70px;
+			height: 70px;
+			@include flex;
+			justify-content: center;
+			align-items: center;
+
+			&__circle {
+				width: 32px;
+				height: 32px;
+				border-radius: 32px;
+				background-color: $u-primary;
+				/* #ifndef APP-NVUE */
+				display: flex;
+				/* #endif */
+				justify-content: center;
+				align-items: center;
+				box-shadow: 1px 1px 4px rgba(155, 191, 255, .7);
+			}
+
+			&__grid-text {
+				font-size: 14px;
+				color: #909399;
+				/* #ifndef APP-PLUS */
+				box-sizing: border-box;
+				/* #endif */
+				margin-left: 6px;
+			}
+		}
+	}
 </style>

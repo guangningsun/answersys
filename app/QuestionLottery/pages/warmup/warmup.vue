@@ -25,7 +25,7 @@
 						placement="column"
 						@change="checkboxChange"
 						:borderBottom="true"
-						activeColor="#5de992"
+						activeColor="#8145e1"
 						iconPlacement="right"
 					>
 						<u-checkbox
@@ -45,7 +45,7 @@
 						v-model="answerRadioValue[item.id-1]"
 						placement="column"
 						:borderBottom="true"
-						activeColor="#5de992"
+						activeColor="#8145e1"
 						iconPlacement="right"
 					>
 						<u-radio
